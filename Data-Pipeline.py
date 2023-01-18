@@ -88,6 +88,9 @@ class WorkPipeline:
         pickle.dump(work_done_today, open('yesterday_hours', 'wb'))
         return(reading_done_today, work_done_today)
 
-
+    def store_values_in_list(self, todays_hours_recorded):
+        for value in todays_hours_recorded:
+            self.work_daily_hours.append(str(value))
+        return(self.work_daily_hours)
 
 class PersonalPipeline:
