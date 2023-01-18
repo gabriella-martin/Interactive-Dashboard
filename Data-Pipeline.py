@@ -93,4 +93,10 @@ class WorkPipeline:
             self.work_daily_hours.append(str(value))
         return(self.work_daily_hours)
 
+    def get_work_data(self):
+        todays_aggregates = self.get_aggregate_hours_spent_on_work_and_reading()
+        todays_hours_recorded = self.get_hours_done_today(todays_aggregates)
+        self.store_values_in_list(todays_hours_recorded)
+
+
 class PersonalPipeline:
