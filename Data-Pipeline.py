@@ -80,4 +80,14 @@ class WorkPipeline:
             work_hours = type['loc_worked_hours']
         return(reading_hours, work_hours)
 
+    def get_hours_done_today(self, todays_aggregates):
+        yesterday = pickle.load(open("yesterday_hours", "rb"))
+        format = '%H:%M'
+        reading_done_today = datetime.strptime(todays_aggregates[0], format) - datetime.strptime(yesterday[0], format)
+        work_done_today = datetime.strptime(todays_aggregates[1], format) - datetime.strptime(yesterday[1], format) 
+        pickle.dump(work_done_today, open('yesterday_hours', 'wb'))
+        return(reading_done_today, work_done_today)
+
+
+
 class PersonalPipeline:
