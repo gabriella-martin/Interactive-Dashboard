@@ -71,4 +71,13 @@ class WorkPipeline:
         self.yesterdays_hours = ['00:00', '00:00']
         pickle.dump(self.yesterdays_hours, open('yesterday_hours', 'wb'))
 
+    def get_aggregate_hours_spent_on_work_and_reading(self):
+        for type in self.retrieve_data:
+            if type['id'] == 1790207:
+                reading_hours = type['loc_worked_hours']
+                continue
+        else:
+            work_hours = type['loc_worked_hours']
+        return(reading_hours, work_hours)
+
 class PersonalPipeline:
