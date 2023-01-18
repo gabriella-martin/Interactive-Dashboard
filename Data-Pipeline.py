@@ -11,7 +11,7 @@ from shutil import copyfileobj
 
 class HealthPipeline:
 
-     def __init__(self):
+    def __init__(self):
         self.yesterdays_date_only = (str(datetime.today() - timedelta(1)))[:10]
         self.api = PyiCloudService(config('APPLE_ID'), config('APPLE_ID_PASSWORD'))
         self.yesterdays_data_in_list = []
@@ -39,6 +39,22 @@ class HealthPipeline:
 
         return(self.yesterdays_health_data_document)      
 
+    def extract_csv_data_to_python_list(self):
+
+        with self.yesterdays_health_data_document.open(stream=True) as response:
+            with open(self.yesterdays_health_data_document.name, 'wb') as file_out:
+                copyfileobj(response.raw, file_out)
+        with open(f'HealthAutoExport-{self.yesterdays_date_only}-{self.yesterdays_date_only} Data.csv') as csv_file:
+            csv_reader = csv.reader(csv_file, delimiter=',')
+            for row in csv_reader:
+                if row[0] == 'Date':
+                    continue
+                else:
+                    self.yesterdays_data_in_list.append(row[1])
+                    self.yesterdays_data_in_list.append(row[2])
+                    self.yesterdays_data_in_list.append(row[3])
+                    self.yesterdays_data_in_list.append(row[5])
+        return(self.yesterdays_data_in_list)
         
 class WorkPipeline:
 
