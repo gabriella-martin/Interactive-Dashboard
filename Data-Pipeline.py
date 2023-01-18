@@ -62,4 +62,13 @@ class HealthPipeline:
 
 class WorkPipeline:
 
+    def __init__(self):
+
+        self.url = 'https://app.trackingtime.co/api/v4/projects/times'
+        self.response = requests.get(self.url, headers={'Content-Type': 'application/json', 'Authorization': config('TRACKING_TIME_API_KEY')})
+        self.retrieve_data = (self.response.json())['data']
+        self.work_daily_hours = []
+        self.yesterdays_hours = ['00:00', '00:00']
+        pickle.dump(self.yesterdays_hours, open('yesterday_hours', 'wb'))
+
 class PersonalPipeline:
