@@ -55,7 +55,11 @@ class HealthPipeline:
                     self.yesterdays_data_in_list.append(row[3])
                     self.yesterdays_data_in_list.append(row[5])
         return(self.yesterdays_data_in_list)
-        
+
+    def get_health_data(self):
+        self.connect_to_api()
+        self.extract_csv_data_to_python_list()
+
 class WorkPipeline:
 
 class PersonalPipeline:
