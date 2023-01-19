@@ -8,9 +8,9 @@ from datetime import datetime
 from datetime import date
 from decouple import config
 from public_api_pipeline import *
-add_logo("missmartin.jpeg", height=250)
+add_logo("missmartin.jpeg", height=150)
 
-st.write("# Gabriella's Dashboard")
+st.write("# Personal Dashboard")
 
 
 
@@ -36,11 +36,14 @@ today = str(date.today())
 col1.write("##### Today: " + f":violet[*{today}*]")
 col2.write('**Next United Match:**')
 
+
+
+
 football_widget = football_api_process()
 def create_section(football_widget):
 
     col1, col2, col3 = st.columns([6,1,1])
-    col1.write(f'#### Good {greeting}')  
+    col1.write(f'#### Good {greeting}, Gabriella')  
     col2.image(football_widget[1])
     col3.image(football_widget[2])
     col1, col2 = st.columns([7,2])
