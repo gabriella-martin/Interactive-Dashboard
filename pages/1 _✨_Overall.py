@@ -39,3 +39,4 @@ col3.metric(label="Productivity", value=yesterdays_metrics[2], delta=str(yesterd
 col4.metric(label="Personal", value=yesterdays_metrics[3], delta=str(yesterday_vs_day_before_yesterday_percent_change[3]) + '%')
 style_metric_cards( border_left_color='#E035E2')
 
+# github yesterday commits
