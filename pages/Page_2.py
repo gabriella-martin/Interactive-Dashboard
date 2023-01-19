@@ -1,3 +1,3 @@
 import streamlit as st
 
-st.write('Hello')
+st.write('page 2')
