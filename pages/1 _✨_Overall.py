@@ -4,8 +4,9 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 from streamlit_extras.metric_cards import style_metric_cards
+from streamlit_extras.app_logo import add_logo
 
-
+add_logo("missmartin.jpeg", height=150)
 
 df = pd.read_csv('Database.csv')
 number_of_entries = len(df)
@@ -40,3 +41,9 @@ col4.metric(label="Personal", value=yesterdays_metrics[3], delta=str(yesterday_v
 style_metric_cards( border_left_color='#E035E2')
 
 # github yesterday commits
+
+options = st.multiselect('What do you want to visualise?', ['Overall', 'Health', 'Productivity', 'Personal', 'Goal Score'], default =['Goal Score', 'Overall'])
+
+st.line_chart(data=df[options])
+
+
