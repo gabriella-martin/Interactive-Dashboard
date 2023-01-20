@@ -4,9 +4,11 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 from streamlit_extras.metric_cards import style_metric_cards
-from streamlit_extras.app_logo import add_logo
+from streamlit_extras.let_it_rain import rain
+
 import json
 from streamlit_echarts import st_echarts
+from streamlit_extras.app_logo import add_logo
 add_logo("missmartin.jpeg", height=150)
 
 df = pd.read_csv('Database.csv')
@@ -43,6 +45,20 @@ col4.metric(label="Personal", value=yesterdays_metrics[3], delta=str(yesterday_v
 style_metric_cards( border_left_color='#ff4bd0')
 
 # github yesterday commits
+if yesterdays_metrics[0] >= 100:
+  rain(emoji="🎯",font_size=54,falling_speed=5,animation_length="5")
+  st.success('Congratulations, yesterday you hit your goal score!', icon='🎯')
+  
+if yesterdays_metrics[0] <100 and yesterdays_metrics[0] >95:
+  rain(emoji="⚠️",font_size=54,falling_speed=5,animation_length="5")
+  st.warning('So close! You nearly hit your target, try better today!', icon="⚠️")
+  
+if yesterdays_metrics[0] <=95:
+  rain(emoji="🚨",font_size=54,falling_speed=5,animation_length="5")
+  st.error('Yesterday you were off track, try extra hard today!', icon='🚨')
+  
+
+
 
 options = st.multiselect('What do you want to visualise?', ['Overall', 'Health', 'Productivity', 'Personal', 'Goal Score'], default =['Goal Score', 'Overall'])
 
