@@ -5,13 +5,15 @@ import pandas as pd
 import plotly.express as px
 from streamlit_extras.metric_cards import style_metric_cards
 from streamlit_extras.app_logo import add_logo
-
+import json
+from streamlit_echarts import st_echarts
 add_logo("missmartin.jpeg", height=150)
 
 df = pd.read_csv('Database.csv')
 number_of_entries = len(df)
 
 st.write("### Yesterday's Metrics")
+st.write('>Quote about better than yesterday')
 
 metric_list = ['Overall', 'Health', 'Productivity', 'Personal']
 yesterdays_metrics = []
@@ -38,7 +40,7 @@ col1.metric(label="Overall", value=yesterdays_metrics[0], delta=str(yesterday_vs
 col2.metric(label="Health", value=yesterdays_metrics[1], delta=str(yesterday_vs_day_before_yesterday_percent_change[1]) + '%')
 col3.metric(label="Productivity", value=yesterdays_metrics[2], delta=str(yesterday_vs_day_before_yesterday_percent_change[2]) + '%')
 col4.metric(label="Personal", value=yesterdays_metrics[3], delta=str(yesterday_vs_day_before_yesterday_percent_change[3]) + '%')
-style_metric_cards( border_left_color='#E035E2')
+style_metric_cards( border_left_color='#ff4bd0')
 
 # github yesterday commits
 
@@ -46,4 +48,68 @@ options = st.multiselect('What do you want to visualise?', ['Overall', 'Health',
 
 st.line_chart(data=df[options])
 
+st.write('### 3 Day Averages')
 
+option = {
+  'series': [
+    {
+      'type': 'gauge',
+      'color': '#ff4bd0',
+      'progress': {
+        'show': True,
+        'width': 10,
+        
+      },
+      'axisLine': {
+        'lineStyle': {
+          'width': 10
+        }
+      },
+      'axisTick': {
+        'show': False
+      },
+      'splitLine': {
+        'length': 0,
+        'lineStyle': {
+          'width': 2,
+          'color': '#ff4bd0'
+        }
+      },
+      'axisLabel': {
+        'distance': 10,
+        'color': 'black',
+        'fontSize': 20
+      },
+      'anchor': {
+        'show': False,
+        'color': '#ff4bd0',
+        'showAbove': True,
+        'size': 0,
+        'itemStyle': {
+          'borderWidth': 10,
+          'color': '#ff4bd0'
+        }
+      },
+      'title': {
+       'show': False
+      },
+      'detail': {
+        'valueAnimation': True,
+        'fontSize': 60,
+        'color': 'black',
+        'offsetCenter':[0, '35%']
+      },
+      'data': [
+        {
+          'value': 70,
+          
+        }
+      ]
+    }
+  ]
+};
+
+st_echarts(options=option)
+
+st.write('### Week Averages')
+st.write('calendar heatmap')
