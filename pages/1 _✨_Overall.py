@@ -58,6 +58,20 @@ if yesterdays_metrics[0] <=95:
   rain(emoji="🚨",font_size=54,falling_speed=5,animation_length="5")
   st.error('Yesterday you were off track, try extra hard today!', icon='🚨')
   
+
+
+
+
+
+
+
+
+options = st.multiselect('What do you want to visualise?', ['Overall', 'Health', 'Productivity', 'Personal', 'Goal Score'], default =['Goal Score', 'Overall'])
+
+st.line_chart(data=df[options])
+
+st.write('### 3 Day Averages')
+
 def get_three_day_average():
   three_day_averages = []
   for category in metric_list:
@@ -69,15 +83,13 @@ def get_three_day_average():
   return three_day_averages
 
 three_day_averages = get_three_day_average()
-
-
 def create_gauges():
   gauges = []
   for metric in three_day_averages:
-    gauge={  'series':[  {  'type':'gauge',  'color':'#ff4bd0',  'progress':{  'show':True,  'width':8,    },  'axisLine':{  'lineStyle':{  'width':10  }  },  
+    gauge={ 'title':{'text':'yas', 'left':'center', 'top':50},  'series':[  {  'type':'gauge',  'color':'#ff4bd0',  'progress':{  'show':True,  'width':8,    },  'axisLine':{  'lineStyle':{  'width':10  }  },  
 'axisTick':{  'show':False  },  'splitLine':{  'length':0,  'lineStyle':{  'width':2,  'color':'#ff4bd0'  }  },  'axisLabel':{  'distance':10,  'color':'black',  'fontSize':10  },  
 'anchor':{  'show':False,  'color':'#ff4bd0',  'showAbove':True,  'size':0,  'itemStyle':{  'borderWidth':10,  'color':'#ff4bd0'  }  },  'title':{ 'text' : 'yee', 'show':True  },  
-'detail':{  'valueAnimation':True,  'fontSize':25,  'color':'black',  'offsetCenter':[0,'35%']  },  'data':[  {  'value':metric,    }  ]  }  ]  }
+  'pointer': {'width':3, 'length' : '40%' },'detail':{  'valueAnimation':True,  'fontSize':25,  'color':'black',  'offsetCenter':[0,'35%']  },  'data':[  {  'value':metric,    }  ]  }  ]  }
     gauges.append(gauge)
   return gauges
 
@@ -94,23 +106,6 @@ with col3:
   st_echarts(options=gauges[2])
 with col4:
   st_echarts(options=gauges[3])
-
-
-
-
-
-
-
-options = st.multiselect('What do you want to visualise?', ['Overall', 'Health', 'Productivity', 'Personal', 'Goal Score'], default =['Goal Score', 'Overall'])
-
-st.line_chart(data=df[options])
-
-st.write('### 3 Day Averages')
-
-option={  'series':[  {  'type':'gauge',  'color':'#ff4bd0',  'progress':{  'show':True,  'width':10,    },  'axisLine':{  'lineStyle':{  'width':10  }  },  
-'axisTick':{  'show':False  },  'splitLine':{  'length':0,  'lineStyle':{  'width':2,  'color':'#ff4bd0'  }  },  'axisLabel':{  'distance':10,  'color':'black',  'fontSize':20  },  
-'anchor':{  'show':False,  'color':'#ff4bd0',  'showAbove':True,  'size':0,  'itemStyle':{  'borderWidth':10,  'color':'#ff4bd0'  }  },  'title':{  'show':False  },  
-'detail':{  'valueAnimation':True,  'fontSize':60,  'color':'black',  'offsetCenter':[0,'35%']  },  'data':[  {  'value':70,    }  ]  }  ]  }
 
 st_echarts(options=option)
 
