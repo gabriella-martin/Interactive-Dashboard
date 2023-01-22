@@ -7,7 +7,7 @@ from streamlit_extras.metric_cards import style_metric_cards
 from streamlit_extras.let_it_rain import rain
 from datetime import datetime
 import json
-
+import random
 import plotly.graph_objects as go
 from streamlit_echarts import st_echarts
 from streamlit_extras.app_logo import add_logo
@@ -17,8 +17,16 @@ add_logo("missmartin.jpeg", height=150)
 df = pd.read_csv('Database.csv')
 number_of_entries = len(df)
 
+quote_list = [ "Do one small thing to make today better than yesterday", "I may not be there yet, but I’m closer than I was yesterday",
+"I wake up every morning believing today is going to be better than yesterday", "Make the work you are doing today better than the work you did yesterday",
+"Be better today than you were yesterday, and be better tomorrow than you are today", "Be your biggest competitor – challenge yourself each day to be better than you were yesterday"
+,"All we can do is be better prepared today than yesterday and better prepared tomorrow than today", "The beautiful thing about today is that you get the choice to make it better than yesterday”, “Above all, I strive to be the best I can, to be better than I was yesterday and better tomorrow",
+"If you make it a habit to make your today better than your yesterday, then for sure, your tomorrow will be better than your today", "That morning she feels fresh-scrubbed and cleansed, as if she is being given yet another opportunity to live her life correctly"]  
+
+quote = random.choice(quote_list)
+
 st.write("### Yesterday's Metrics")
-st.write('>randomised Quote about better than yesterday')
+st.write(f'>{quote}')
 
 metric_list = ['Overall', 'Health', 'Productivity', 'Personal']
 yesterdays_metrics = []
@@ -61,9 +69,14 @@ if yesterdays_metrics[0] <=95:
   rain(emoji="🚨",font_size=54,falling_speed=5,animation_length="5")
   st.error('Yesterday you were off track, try extra hard today!', icon='🚨')
   
-options = st.multiselect('What do you want to visualise?', ['Overall', 'Health', 'Productivity', 'Personal', 'Goal Score'], default =['Goal Score', 'Overall'])
+select = st.multiselect('What do you want to visualise?', ['Overall', 'Health', 'Productivity', 'Personal', 'Goal Score'], default =['Goal Score', 'Overall'])
 
-st.line_chart(data=df[options])
+fig = px.line(df, x='Days', y=select, color_discrete_sequence=[ "pink", "hotpink", "deeppink",  'plum', 'darkmagenta'])
+fig.update(layout_yaxis_range = [50,140])
+
+st.plotly_chart(fig)
+
+
 
 st.write('### 3 Day Averages')
 
@@ -145,14 +158,15 @@ with col4:
   st_echarts(options=seven_day_gauges[3])
 st.write('### Overall Score Heatmap')
 
-z = df['Overall']
+select = st.selectbox(label ='What heatmap do you want to visualise?', options=['Overall', 'Health', 'Productivity', 'Personal'])
+
+
+
+z = df[select]
 x = df['Month']
 y = df['Day of Month']
-heatmap = go.Figure([go.Heatmap(z=z, x=x, y=y, colorscale=[[0, 'rgb(222, 195, 210)'],[1, 'rgb(196, 6, 147)']])])
+heatmap = go.Figure([go.Heatmap(z=z, x=x, y=y, colorscale=[[0, '#fcfafc'],[1, '#fc03bb']])])
 heatmap.update_layout( xaxis_title = 'Month', yaxis_title = 'Day of Month')
-heatmap.update_xaxes(title_font_color='black')
-heatmap.update_yaxes(title_font_color='black')
 
 st.plotly_chart(heatmap)
 
-st.write('color numbers')
