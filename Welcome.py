@@ -14,7 +14,7 @@ add_logo("missmartin.jpeg", height=150)
 
 st.write("# Personal Dashboard")
 
-
+st.write('yas my name')
 
 def get_greeting():
     today = str(datetime.now())
@@ -64,13 +64,12 @@ def nasa_image_of_the_day():
     url = 'https://api.nasa.gov/planetary/apod?api_key=PZcnX4xvaDZt6n394qdhjTT9p9Jvwex3oTqMofpt'
     response = requests.get(url)
     nasa_image = (response.json())['hdurl']
-    st.image(nasa_image, caption='NASA Image of the Day', width=150)
+    st.image(nasa_image, caption='NASA Image of the Day', width=147)
 
 
 
 col1, col2 = st.columns([7,2])
 with col1:
-
 
     pass
 
@@ -87,3 +86,4 @@ with col2:
             url = dj_mix_dict[mix]
     st_player(url=url, height=300, playing=False)
     
+
