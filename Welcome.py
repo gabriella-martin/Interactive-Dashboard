@@ -3,39 +3,74 @@ from streamlit_extras.mention import mention
 from streamlit_extras.colored_header import colored_header
 from streamlit_extras.app_logo import add_logo
 import requests
-import datetime
-from datetime import datetime
-from datetime import date
+
+
 from decouple import config
 from public_api_pipeline import *
 from streamlit_player import st_player
 import random
-add_logo("missmartin.jpeg", height=150)
+import pickle
+add_logo("logo_transparent_background.png", height=150)
+
+
+
+
+with open('footie', 'rb') as fb:
+    football_widget = pickle.load(fb)
 
 st.write("# Personal Dashboard")
 
+today = str(datetime.now())
+hour = today[10:13]
 
-
-def get_greeting():
-    today = str(datetime.now())
-    today = today[10:13]
-    today = int(today)
-    if today < 12:
+def get_greeting(hour):
+    
+    hour = int(hour)
+    if hour < 12:
         greeting = 'Morning'
-    if today >=12 and today <18:
+    if hour >=12 and hour <18:
         greeting = 'Afternoon'
-    if today >=18:
+    if hour >=18:
         greeting ='Evening'
     return greeting
     
 
-greeting = get_greeting()
+greeting = get_greeting(hour)
 
 #medium_link = mention(label='Medium Article', icon='✍🏽', url='https://google.com')
 
+
+weather  = get_weather()
+
+sunrise_text = (str(weather[0]) + 'am')
+sunset_text = (str(weather[1]) + 'pm')
+temp_text = str(weather[2]) +  '\N{DEGREE SIGN}' + 'C'
+description = weather[3]
+
+def get_condition_emoji(description):
+    if 'Thunderstorm' in description:
+        condition_emoji = '⚡'
+    elif 'Drizzle' in description:
+        condition_emoji ='💧'
+    elif 'Rain' in description:
+        condition_emoji ='🌧️'
+    elif 'Snow' in description:
+        condition_emoji ='❄️'
+    elif 'Clear Sky' in description:
+        condition_emoji = '🌤'
+    elif 'Clouds' in description:
+        condition_emoji ='️🌥'
+    else:
+        condition_emoji = '🌫️'
+        
+    return condition_emoji
+
+condition = get_condition_emoji(description)
+
 col1, col2 = st.columns([7,2])
-today = str(date.today())
-col1.write("##### Today: " + f":violet[*{today}*]")
+today = str(datetime.today())
+today = today[:10]
+col1.write(f"##### Today: :violet[*{today}*] | {temp_text} {condition} | ☀️{sunrise_text} |🌙{sunset_text}")
 col2.write('**Next United Match:**')
 
 
