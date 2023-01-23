@@ -1,7 +1,7 @@
 import streamlit as st
-
+from streamlit_extras.stoggle import stoggle
 from streamlit_extras.app_logo import add_logo
-add_logo("missmartin.jpeg", height=150)
+add_logo("logo_transparent_background.png", height=150)
 
 import plotly.express as px
 import pandas as pd
@@ -16,7 +16,12 @@ style_metric_cards( border_left_color='#ff4bd0')
 
 
 
-st.write('## Health')
+st.markdown("<h3 style='text-align: center;color: black;'>Health Section</h3>", unsafe_allow_html=True)
+
+
+stoggle('Data Details', 'Rawr')
+stoggle('Data Pipeline', 'Rawr')
+
 # yesterday
 st.markdown("<h4 style='text-align: center;color: black;'>Short Term</h4>", unsafe_allow_html=True)
 

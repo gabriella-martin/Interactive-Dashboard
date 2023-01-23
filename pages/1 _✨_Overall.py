@@ -5,7 +5,7 @@ import pandas as pd
 import plotly.express as px
 from streamlit_extras.metric_cards import style_metric_cards
 from streamlit_extras.let_it_rain import rain
-from datetime import datetime
+import datetime
 import json
 import random
 import plotly.graph_objects as go
@@ -13,10 +13,7 @@ from streamlit_echarts import st_echarts
 from streamlit_extras.app_logo import add_logo
 import requests
 from decouple import config
-add_logo("missmartin.jpeg", height=150)
-
-
-
+add_logo("logo_transparent_background.png", height=150)
 
 
 

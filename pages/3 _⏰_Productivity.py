@@ -8,11 +8,15 @@ import plotly.express as px
 df = pd.read_csv('Database.csv')
 number_of_entries = len(df)
 from streamlit_extras.metric_cards import style_metric_cards
+from streamlit_extras.stoggle import stoggle
+
+st.markdown("<h3 style='text-align: center;color: black;'>Productivity Section</h3>", unsafe_allow_html=True)
 
 
+stoggle('Data Details', 'Rawr')
+stoggle('Data Pipeline', 'Rawr')
 
 
-st.write('### Productivity')
 # yesterday
 st.markdown("<h4 style='text-align: center;color: black;'>Short Term</h4>", unsafe_allow_html=True)
 
