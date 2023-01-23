@@ -4,7 +4,7 @@ import pickle
 import requests
 import shutil
 
-from datetime import datetime, timedelta
+#from datetime import datetime, timedelta
 from decouple import config
 from pyicloud import PyiCloudService
 from shutil import copyfileobj
@@ -109,7 +109,8 @@ class PersonalPipeline:
         self.daily_completed_tasks = []
         self.section_number_of_tasks = []
         self.completed_percentages = []
-        self.today = (datetime.today())
+        self.today = (datetime.datetime.today())
+        self.today = self.today.replace(hour=23, minute=59, second=59, microsecond=999999)
         self.today_str = str((self.today))[:10]
         self.day_of_the_week = str(self.today.weekday())
         
@@ -120,11 +121,11 @@ class PersonalPipeline:
             for task in self.tasks:
                 task = ((str(task))[4:]).split(', ')
                 task[8] = task[8][14:-1]
-                task[8] = datetime.strptime(task[8], '%Y-%m-%d')
-                if str(id) in task[-3] and task[8] > self.today:
+                task[8] = datetime.datetime.strptime(task[8], '%Y-%m-%d')
+                if id in task[-3] and task[8] > self.today:
                     total_completed_tasks +=1
             self.daily_completed_tasks.append(total_completed_tasks)
-        return self.daily_completed_tasks   
+        return(self.daily_completed_tasks)   
 
     def get_daily_task_count(self):
         for id in self.daily_section_id:
@@ -145,7 +146,7 @@ class PersonalPipeline:
         for task in self.tasks: 
             task = ((str(task))[4:]).split(', ')
             task[8] = task[8][14:-1]
-            task[8] = datetime.strptime(task[8], '%Y-%m-%d')
+            task[8] = datetime.datetime.strptime(task[8], '%Y-%m-%d')
             task[7] = (task[7][13:-1])
             if task[7] == '':
                 if str(todays_weekly_section) in task[-3] and task[8] > self.today:
@@ -161,30 +162,67 @@ class PersonalPipeline:
         self.daily_completed_tasks.append(total_completed_tasks_beauty)
         
 
-        print(self.daily_completed_tasks)
+        return(self.daily_completed_tasks)
 
     def get_weekly_task_count(self):
         total_section_tasks_cleaning = 0
         total_section_tasks_dogs = 0
         total_section_tasks_beauty = 0
-        for id in self.weekly_section_id.values():
-            for task in self.tasks:
-                task = ((str(task))[4:]).split(', ')
-                task[7] = (task[7][13:-1])
-                if str(id) in task[-3] and task[7] == '':
+        todays_weekly_section = self.weekly_section_id[self.day_of_the_week]
+        for task in self.tasks:
+            task = ((str(task))[4:]).split(', ')
+            task[7] = (task[7][13:-1])
+            if str(todays_weekly_section) in task[-3]:
+                if task[7] == '':
                     total_section_tasks_cleaning +=1
 
-                if str(id) in task[-3] and task[7] == 'dogs':
+                elif task[7] == 'dogs':
                     total_section_tasks_dogs +=1
 
-                if str(id) in task[-3] and task[7] == 'beauty':
-                    total_section_tasks_beauty +=1
+                elif task[7] == 'beauty':
+                        total_section_tasks_beauty +=1
 
         self.section_number_of_tasks.append(total_section_tasks_cleaning)
         self.section_number_of_tasks.append(total_section_tasks_dogs)
         self.section_number_of_tasks.append(total_section_tasks_beauty)
             
-        print(self.section_number_of_tasks)
+        return(self.section_number_of_tasks)
+    
+    def collate_categories(self):
+        collated_list_completed = []
+        collated_list_count = []
+
+        for index, value in enumerate(self.daily_completed_tasks):
+            if index <= 2:
+                collated = value + (self.daily_completed_tasks)[index+3]
+                collated_list_completed.append(collated)
+            else: break
+            
+
+        for index, value in enumerate(self.section_number_of_tasks):
+            if index <= 2:
+                collated = value + (self.section_number_of_tasks)[index+3]
+                collated_list_count.append(collated)
+            else: break
+
+        return(collated_list_completed, collated_list_count)
+
+
+    def find_percentages_of_completed(self, collated_lists):
+
+
+        find_fraction_complete = [b / m for b,m in zip(collated_lists[0], collated_lists[1])]
+        percentages_list = []
+        percentages_list = [str(round(item * 100)) + '%' for item in find_fraction_complete]
+        print(percentages_list)
+        
+    def personal_pipeline(self):
+        self.get_daily_task_count()
+        self.get_weekly_task_count()
+        self.get_daily_tasks_done()
+        self.get_weekday_specific_tasks_done()
+        collated_lists = self.collate_categories()
+        self.find_percentages_of_completed(collated_lists)
 
 
             
@@ -193,5 +231,4 @@ class PersonalPipeline:
        
 
 a = PersonalPipeline()
-#a.get_daily_tasks_done()
-a.get_weekly_task_count()
+a.personal_pipeline()
