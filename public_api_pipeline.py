@@ -1,13 +1,16 @@
 from decouple import config 
-from datetime import datetime
+
+
 import requests 
-
-
+import pickle
+import datetime
+from datetime import datetime
 def get_manutd_next_game_data():
     url = "https://api-football-v1.p.rapidapi.com/v3/fixtures"
     querystring = {"team":"33","next":"1"}
     headers = {"X-RapidAPI-Key": config('FOOTBALL_API_KEY'), "X-RapidAPI-Host": "api-football-v1.p.rapidapi.com"}
     response = requests.request("GET", url, headers=headers, params=querystring)
+    response = response
     return response
 
 def format_date(response):
@@ -50,3 +53,29 @@ def football_api_process():
         format_date_and_time = format_date(response)
         football_widget = extract_football_data(response, format_date_and_time)
         return football_widget
+
+football_widget = football_api_process()
+
+
+with open('footie', 'wb') as fb:
+    pickle.dump(football_widget, fb)
+
+
+
+
+
+def get_weather():
+  key = config('WEATHER_API_KEY')
+  url = f'https://api.openweathermap.org/data/3.0/onecall?lat=51.46&lon=0.01&exclude=minutely,hourly,daily,alerts&appid={key}&units=metric'
+  response = (requests.get(url)).json()
+  json_response = response
+
+  sunrise_time_epoch = json_response['current']['sunrise']
+  sunset_time_epoch = json_response['current']['sunset']
+  temperature = round(json_response['current']['temp'])
+  condition = (json_response['current']['weather'][0]['description']).title()
+  sunrise_time = datetime.fromtimestamp(sunrise_time_epoch).strftime('%H:%M')
+  sunset_time = datetime.fromtimestamp(sunset_time_epoch).strftime('%I:%M')
+
+  return(sunrise_time, sunset_time, temperature, condition)
+
