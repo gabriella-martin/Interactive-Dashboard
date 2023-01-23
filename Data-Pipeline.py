@@ -8,6 +8,7 @@ from datetime import datetime, timedelta
 from decouple import config
 from pyicloud import PyiCloudService
 from shutil import copyfileobj
+from todoist_api_python.api import TodoistAPI
 
 class HealthPipeline:
 
@@ -98,5 +99,99 @@ class WorkPipeline:
         todays_hours_recorded = self.get_hours_done_today(todays_aggregates)
         self.store_values_in_list(todays_hours_recorded)
 
-
 class PersonalPipeline:
+
+    def __init__(self):
+        api = TodoistAPI(config('TODOIST_API_KEY'))
+        self.tasks = api.get_tasks()
+        self.daily_section_id = ['109399215', '109857457', '109865778']
+        self.weekly_section_id = {'0': 109913929, '1': 110024847, '2': 110024848, '3': 110024852, '4': 110024855, '5': 110024934, '6': 110024936}
+        self.daily_completed_tasks = []
+        self.section_number_of_tasks = []
+        self.completed_percentages = []
+        self.today = (datetime.today())
+        self.today_str = str((self.today))[:10]
+        self.day_of_the_week = str(self.today.weekday())
+        
+        
+    def get_daily_tasks_done(self):
+        for id in self.daily_section_id:
+            total_completed_tasks = 0
+            for task in self.tasks:
+                task = ((str(task))[4:]).split(', ')
+                task[8] = task[8][14:-1]
+                task[8] = datetime.strptime(task[8], '%Y-%m-%d')
+                if str(id) in task[-3] and task[8] > self.today:
+                    total_completed_tasks +=1
+            self.daily_completed_tasks.append(total_completed_tasks)
+        return self.daily_completed_tasks   
+
+    def get_daily_task_count(self):
+        for id in self.daily_section_id:
+            total_section_tasks = 0
+            for task in self.tasks:
+                task = ((str(task))[4:]).split(', ')
+                if id in task[-3]:
+                    total_section_tasks +=1
+                
+            self.section_number_of_tasks.append(total_section_tasks)
+        return self.section_number_of_tasks
+
+    def get_weekday_specific_tasks_done(self):
+        todays_weekly_section = self.weekly_section_id[self.day_of_the_week]
+        total_completed_tasks_cleaning = 0
+        total_completed_tasks_dogs = 0
+        total_completed_tasks_beauty = 0
+        for task in self.tasks: 
+            task = ((str(task))[4:]).split(', ')
+            task[8] = task[8][14:-1]
+            task[8] = datetime.strptime(task[8], '%Y-%m-%d')
+            task[7] = (task[7][13:-1])
+            if task[7] == '':
+                if str(todays_weekly_section) in task[-3] and task[8] > self.today:
+                    total_completed_tasks_cleaning +=1
+            if task[7] == 'dogs':
+                if str(todays_weekly_section) in task[-3] and task[8] > self.today:
+                    total_completed_tasks_dogs +=1
+            if task[7] == 'beauty':
+                if str(todays_weekly_section) in task[-3] and task[8] > self.today:
+                    total_completed_tasks_beauty +=1
+        self.daily_completed_tasks.append(total_completed_tasks_cleaning)
+        self.daily_completed_tasks.append(total_completed_tasks_dogs)
+        self.daily_completed_tasks.append(total_completed_tasks_beauty)
+        
+
+        print(self.daily_completed_tasks)
+
+    def get_weekly_task_count(self):
+        total_section_tasks_cleaning = 0
+        total_section_tasks_dogs = 0
+        total_section_tasks_beauty = 0
+        for id in self.weekly_section_id.values():
+            for task in self.tasks:
+                task = ((str(task))[4:]).split(', ')
+                task[7] = (task[7][13:-1])
+                if str(id) in task[-3] and task[7] == '':
+                    total_section_tasks_cleaning +=1
+
+                if str(id) in task[-3] and task[7] == 'dogs':
+                    total_section_tasks_dogs +=1
+
+                if str(id) in task[-3] and task[7] == 'beauty':
+                    total_section_tasks_beauty +=1
+
+        self.section_number_of_tasks.append(total_section_tasks_cleaning)
+        self.section_number_of_tasks.append(total_section_tasks_dogs)
+        self.section_number_of_tasks.append(total_section_tasks_beauty)
+            
+        print(self.section_number_of_tasks)
+
+
+            
+
+
+       
+
+a = PersonalPipeline()
+#a.get_daily_tasks_done()
+a.get_weekly_task_count()
