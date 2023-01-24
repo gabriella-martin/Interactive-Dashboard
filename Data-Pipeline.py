@@ -1,11 +1,15 @@
 import csv
 import datetime
+import os.path
 import pickle
 import requests
 import shutil
 
 from datetime import  timedelta
 from decouple import config
+from google.auth.transport.requests import Request
+from google.oauth2.credentials import Credentials
+from googleapiclient.discovery import build
 from pyicloud import PyiCloudService
 from shutil import copyfileobj
 from todoist_api_python.api import TodoistAPI
@@ -83,10 +87,10 @@ class TrackingTimePipeline:
         return(reading_hours, work_hours)
 
     def get_hours_done_today(self, todays_aggregates):
-        yesterday = pickle.load(open("yesterday_hours", "rb"))
+        end_of_day_today = pickle.load(open("yesterday_hours", "rb"))
         format = '%H:%M'
-        reading_done_today = datetime.strptime(todays_aggregates[0], format) - datetime.strptime(yesterday[0], format)
-        work_done_today = datetime.strptime(todays_aggregates[1], format) - datetime.strptime(yesterday[1], format) 
+        reading_done_today = datetime.strptime(todays_aggregates[0], format) - datetime.strptime(end_of_day_today[0], format)
+        work_done_today = datetime.strptime(todays_aggregates[1], format) - datetime.strptime(end_of_day_today[1], format) 
         pickle.dump(work_done_today, open('yesterday_hours', 'wb'))
         return(reading_done_today, work_done_today)
 
@@ -227,7 +231,7 @@ class TodoistPipeline:
 
 class WithingsPipeline:
 
-    def get_data(self):
+    def connect_to_api(self):
         self.body_measurements = []
         headers =  {"Authorization": f"Bearer {config('WITHINGS_ACCESS_TOKEN')}"}
         data = {'action': 'getmeas','meastypes': '1,6' }
@@ -247,6 +251,40 @@ class WithingsPipeline:
     def withings_pipeline(self):
         response = self.get_data()
         self.parse_data(response)
+
+class GoogleCalendarPipeline:
+
+    def __init__(self):
+        SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
+        creds = Credentials.from_authorized_user_file('token.json', SCOPES)
+        self.service = build('calendar', 'v3', credentials=creds)
+        self.now = datetime.datetime.utcnow().isoformat() + 'Z'
+        self.time_now = datetime.datetime.today()
+        self.start_of_day_today = self.time_now.replace(hour=00, minute=00, second=00)
+        self.end_of_day_today = self.time_now.replace(hour=23, minute=59, second=59, microsecond=999999)
+        self.start_of_day_today = (self.start_of_day_today).isoformat() + 'Z'
+        self.end_of_day_today = (self.end_of_day_today).isoformat() + 'Z'
+    
+        
+    def get_todays_events(self):
+        events_result = self.service.events().list(calendarId='primary', timeMin=self.start_of_day_today, timeMax=self.end_of_day_today,
+                                              singleEvents=True,
+                                              orderBy='startTime').execute()
+        events = events_result.get('items', [])
+        all_event_data = []
+        for event in events:
+            event_data = []
+            event_name = (event['summary'])
+            start_time = str(event['start']['dateTime'])[11:-4]
+            end_time = str((event['end']['dateTime']))[11:-4]
+            event_data.extend([event_name, start_time, end_time])
+            all_event_data.append(event_data)
+
+        return(all_event_data)
+
+
+
             
+
 
 
