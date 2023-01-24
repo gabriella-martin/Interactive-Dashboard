@@ -13,14 +13,14 @@ import pickle
 add_logo("logo_transparent_background.png", height=150)
 
 
-
+from Data_Pipeline import *
 
 with open('footie', 'rb') as fb:
     football_widget = pickle.load(fb)
 
 st.write("# Personal Dashboard")
 
-today = str(datetime.now())
+today = str(datetime.datetime.now())
 hour = today[10:13]
 
 def get_greeting(hour):
@@ -68,18 +68,24 @@ def get_condition_emoji(description):
 condition = get_condition_emoji(description)
 
 col1, col2 = st.columns([7,2])
-today = str(datetime.today())
+today = str(datetime.datetime.today())
 today = today[:10]
 col1.write(f"##### Today: :violet[*{today}*] | {temp_text} {condition} | ☀️{sunrise_text} |🌙{sunset_text}")
 col2.write('**Next United Match:**')
 
-
-
-
-football_widget = football_api_process()
-
+a = GoogleCalendarPipeline()
+todays_events = a.get_todays_events()
 col1, col2, col3 = st.columns([6,0.85,0.85])
 col1.write(f'#### Good {greeting}, Gabriella')  
+col1.write(f'Welcome, here are your events for today:')
+for event in todays_events:
+    col1.write(f'{event}')
+
+##
+
+
+
+
 col2.image(football_widget[1])
 col3.image(football_widget[2])
 col1, col2 = st.columns([7,2])
@@ -105,7 +111,6 @@ def nasa_image_of_the_day():
 
 col1, col2 = st.columns([7,2])
 with col1:
-
 
     pass
 
