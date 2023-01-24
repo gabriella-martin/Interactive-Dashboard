@@ -9,9 +9,7 @@ from decouple import config
 from pyicloud import PyiCloudService
 from shutil import copyfileobj
 from todoist_api_python.api import TodoistAPI
-from withings_api import WithingsAuth, WithingsApi, AuthScope
-from withings_api.common import get_measure_value, MeasureType
-from urllib import parse
+
 
 class AppleHealthPipeline:
 
@@ -227,18 +225,28 @@ class TodoistPipeline:
         collated_lists = self.collate_categories()
         self.find_percentages_of_completed(collated_lists)
 
-#class WithingsPipeline:
+class WithingsPipeline:
 
-def get_data():
-    headers =  {"Authorization": f"Bearer {config('WITHINGS_ACCESS_TOKEN')}"}
-    data = {
-    'action': 'getmeas',
-    'meastypes': '1,6,8,76' }
-    
-    response = requests.post('https://wbsapi.withings.net/measure', headers=headers, data=data)
-    print(response.json())
+    def get_data(self):
+        self.body_measurements = []
+        headers =  {"Authorization": f"Bearer {config('WITHINGS_ACCESS_TOKEN')}"}
+        data = {'action': 'getmeas','meastypes': '1,6' }
+        response = requests.post('https://wbsapi.withings.net/measure', headers=headers, data=data)
+        response = response.json()
+        return response
 
-get_data()    
- 
+    def parse_data(self, response):
+        data_items = response['body']['measuregrps'][0]['measures']
+        for data_item in data_items:
+            data_value = str((data_item['value']))[:2] + '.' + str((data_item['value']))[2:4]
+            data_value = float(data_value)
+            self.body_measurements.append(data_value)
+
+        return(self.body_measurements)
+        
+    def withings_pipeline(self):
+        response = self.get_data()
+        self.parse_data(response)
+            
 
 
