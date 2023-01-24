@@ -4,13 +4,16 @@ import pickle
 import requests
 import shutil
 
-#from datetime import datetime, timedelta
+from datetime import  timedelta
 from decouple import config
 from pyicloud import PyiCloudService
 from shutil import copyfileobj
 from todoist_api_python.api import TodoistAPI
+from withings_api import WithingsAuth, WithingsApi, AuthScope
+from withings_api.common import get_measure_value, MeasureType
+from urllib import parse
 
-class HealthPipeline:
+class AppleHealthPipeline:
 
     def __init__(self):
         self.yesterdays_date_only = (str(datetime.today() - timedelta(1)))[:10]
@@ -61,7 +64,7 @@ class HealthPipeline:
         self.connect_to_api()
         self.extract_csv_data_to_python_list()
 
-class WorkPipeline:
+class TrackingTimePipeline:
 
     def __init__(self):
 
@@ -99,7 +102,7 @@ class WorkPipeline:
         todays_hours_recorded = self.get_hours_done_today(todays_aggregates)
         self.store_values_in_list(todays_hours_recorded)
 
-class PersonalPipeline:
+class TodoistPipeline:
 
     def __init__(self):
         api = TodoistAPI(config('TODOIST_API_KEY'))
@@ -224,11 +227,18 @@ class PersonalPipeline:
         collated_lists = self.collate_categories()
         self.find_percentages_of_completed(collated_lists)
 
+#class WithingsPipeline:
 
-            
+def get_data():
+    headers =  {"Authorization": f"Bearer {config('WITHINGS_ACCESS_TOKEN')}"}
+    data = {
+    'action': 'getmeas',
+    'meastypes': '1,6,8,76' }
+    
+    response = requests.post('https://wbsapi.withings.net/measure', headers=headers, data=data)
+    print(response.json())
+
+get_data()    
+ 
 
 
-       
-
-a = PersonalPipeline()
-a.personal_pipeline()
