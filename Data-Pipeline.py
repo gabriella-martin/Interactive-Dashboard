@@ -283,8 +283,52 @@ class GoogleCalendarPipeline:
         return(all_event_data)
 
 
+class ExistPipeline():
 
+    def get_mood_data(self):
+        yesterdays_date = (str(datetime.datetime.today()))[:10]
+        response = requests.get("https://exist.io/api/2/attributes/with-values", 
+                headers = {'Authorization': f"Token {config('EXIST_API_TOKEN')}"} )
+
+        yesterdays_date = (str(datetime.datetime.today()))[:10]
+        response = (response.json())  
+
+        if response['results'][2]['values'][0]['date'] == yesterdays_date:
+
+            mood_yesterday = response['results'][2]['values'][0]['value']
             
+       
+        if response['results'][3]['values'][0]['date'] == yesterdays_date:
 
+            journal_yesterday = response['results'][3]['values'][0]['value']
+            
+        return mood_yesterday, journal_yesterday
 
+    def get_sleep_data(self):
+        yesterdays_date = (str(datetime.datetime.today()))[:10]
+        response = requests.get("https://exist.io/api/2/attributes/with-values",headers = {'Authorization': f"Token {config('EXIST_API_TOKEN')}"} )
+        yesterdays_date = (str(datetime.datetime.today()))[:10]
+        response = (response.json())
+
+        if response['results'][7]['values'][0]['date'] == yesterdays_date:
+            wake_time = response['results'][7]['values'][0]['value'] 
+            #in minutes from midnight
+
+        wake_hour = (str(wake_time/60))[:1]
+        wake_minutes = round(((int((str(wake_time/60))[2:4]))/100)*60)
+        wake_string = wake_hour + ':' + str(wake_minutes) + 'am'
+
+        
+        if response['results'][4]['values'][0]['date'] == yesterdays_date:
+
+            sleep_time = response['results'][4]['values'][0]['value'] 
+
+        sleep_hours = (str(sleep_time/60))[:1]
+        sleep_minutes = round(((int((str(sleep_time/60))[2:4]))/100)*60)
+        sleep_string = sleep_hours + 'hr' + str(sleep_minutes)
+    
+        return(sleep_string, wake_string)
+
+a=ExistPipeline()
+a.get_sleep_data()
 
