@@ -39,7 +39,7 @@ greeting = get_greeting(hour)
 
 #medium_link = mention(label='Medium Article', icon='✍🏽', url='https://google.com')
 
-
+from public_api_pipeline import *
 weather  = get_weather()
 
 sunrise_text = (str(weather[0]) + 'am')
@@ -71,7 +71,8 @@ col1, col2 = st.columns([7,2])
 today = str(datetime.today())
 today = today[:10]
 col1.write(f"##### Today: :violet[*{today}*] | {temp_text} {condition} | ☀️{sunrise_text} |🌙{sunset_text}")
-col2.write('**Next United Match:**')
+
+col2.write(f'**{football_widget[3]}**')
 
 a = DataPipeline.GoogleCalendarPipeline()
 todays_events = a.get_todays_events()
@@ -81,10 +82,8 @@ todays_events = a.get_todays_events()
 
 
 col1, col2, col3 = st.columns([6,0.9,0.9])
-col1.write(f'### Good {greeting}, Gabriella')  
+col1.write(f'#### Good {greeting}, Gabriella')  
 
-
-    
 
 
 col2.image(football_widget[1])
@@ -131,25 +130,74 @@ def get_each_cal_event():
     for i in range(0,number_of_events_today):
         time_of_day = (todays_events)[i][1] + '-' + (todays_events)[i][2]
         name_of_event = todays_events[i][0]
-        event_row = annotated_text("", (name_of_event, time_of_day, '#FFB6C1', "5px black"))
+        event_row = annotated_text("", (name_of_event, time_of_day, '#f7dfeb', "5px black"))
         event_rows.append(event_row)
     return event_rows
 
 
+a=DataPipeline.ExistPipeline()
+
+mood_data = a.get_mood_data()
+mood_data = list(mood_data)
+sleep_data = a.get_sleep_data()
+
+def get_recap_and_overview(mood_data):
+    mood_data[1] =mood_data[1].split(',')
+    mood_data[1][0] = mood_data[1][0].split('/')
+    mood_data[1][1] = mood_data[1][1].split('/')
+    return mood_data[1]
+
+
+mood_data[1] = get_recap_and_overview(mood_data)
 
 
 
+def get_mood_emoji(mood_data):
+    if mood_data[0] == 9:
+        mood_data[0] = '🤩'
+    elif mood_data[0] <9 and mood_data[0] >= 7:
+        mood_data[0] = '😆'
+    elif mood_data <7 and mood_data[0] >= 5:
+        mood_data[0] = '🙂'   
+    elif mood_data[0] <5 and mood_data[0] >=3:
+        mood_data[0] = '😐'
+    else:
+        mood_data[0] ='😶'
+    return mood_data[0]
 
-col1, col2 = st.columns([7,2])
+mood_data[0] = get_mood_emoji(mood_data)
+
+col1, col2, col3 = st.columns([7,7,4])
 with col1:
-    st.write("Today's Schedule")
-    event_rows = get_each_cal_event()
 
-    pass
+    event_rows = get_each_cal_event()
+    
+    
 
 with col2:
-    col2.write(f'**{football_widget[3]}**')
+    st.metric(label = 'Sleep', value = sleep_data[0])
+    st.metric(label = 'Awake', value = sleep_data[1])
+    st.write(f'##### Mood Yesterday: {mood_data[0]}')
+    #st.write(mood_data[1])
+with col3:
+    
     nasa_image_of_the_day()
+    
+col1, col2 = st.columns([7,2])
+
+with col1:
+    st.write('##### Goals for Today:')
+
+    for i in range(0,3):
+        st.text(f'{mood_data[1][1][i]}')
+
+    st.write('##### Yesterday Recap:')
+
+    for i in range(0,3):
+        st.text(f'{mood_data[1][0][i]}')
+    
+
+with col2:
     selection = st.selectbox(label ='What is the soundtrack for today?', options=['Summer Temptations', 'Urban Volume', 'Sugar Baby', '90s Club Classics'])
     
 
@@ -160,4 +208,3 @@ with col2:
         if selection == mix:
             url = dj_mix_dict[mix]
     st_player(url=url, height=300, playing=False)
-    
