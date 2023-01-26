@@ -18,7 +18,7 @@ from todoist_api_python.api import TodoistAPI
 class AppleHealthPipeline:
 
     def __init__(self):
-        self.yesterdays_date_only = (str(datetime.today() - timedelta(1)))[:10]
+        self.todays_date_only = (str(datetime.today() - timedelta(1)))[:10]
         self.api = PyiCloudService(config('APPLE_ID'), config('APPLE_ID_PASSWORD'))
         self.yesterdays_data_in_list = []
 
@@ -41,7 +41,7 @@ class AppleHealthPipeline:
                 if not result:
                     print("Failed to request trust. You will likely be prompted for the code again in the coming weeks")
             
-        self.yesterdays_health_data_document = self.api.drive[f'HealthAutoExport-{self.yesterdays_date_only}-{self.yesterdays_date_only} Data.csv']
+        self.yesterdays_health_data_document = self.api.drive[f'HealthAutoExport-{self.todays_date_only}-{self.todays_date_only} Data.csv']
 
         return(self.yesterdays_health_data_document)      
 
@@ -50,7 +50,7 @@ class AppleHealthPipeline:
         with self.yesterdays_health_data_document.open(stream=True) as response:
             with open(self.yesterdays_health_data_document.name, 'wb') as file_out:
                 copyfileobj(response.raw, file_out)
-        with open(f'HealthAutoExport-{self.yesterdays_date_only}-{self.yesterdays_date_only} Data.csv') as csv_file:
+        with open(f'HealthAutoExport-{self.todays_date_only}-{self.todays_date_only} Data.csv') as csv_file:
             csv_reader = csv.reader(csv_file, delimiter=',')
             for row in csv_reader:
                 if row[0] == 'Date':
@@ -282,46 +282,74 @@ class GoogleCalendarPipeline:
 
         return(all_event_data)
 
-
 class ExistPipeline():
 
+    def get_github_contributions(self):
+        
+        response = requests.get("https://exist.io/api/1/users/gabriellamartin/attributes/commits/", 
+                headers = {'Authorization': f"Token {config('EXIST_API_TOKEN')}"} )
+        todays_date = (str(datetime.datetime.today()))[:10]
+        yesterdays_date = (str(datetime.datetime.today() - timedelta(1)))[:10]
+        response = (response.json())  
+
+        responses =  response['results']
+
+        for response in responses:
+            if response['date'] == todays_date:
+                todays_commits = response['value'] 
+                
+
+            elif response['date'] == yesterdays_date:
+                yesterdays_commits = response['value']
+        
+        return yesterdays_commits, todays_commits
+
+
+
     def get_mood_data(self):
-        yesterdays_date = (str(datetime.datetime.today()))[:10]
+        todays_date = (str(datetime.datetime.today()))[:10]
         response = requests.get("https://exist.io/api/2/attributes/with-values", 
                 headers = {'Authorization': f"Token {config('EXIST_API_TOKEN')}"} )
 
-        yesterdays_date = (str(datetime.datetime.today()))[:10]
+        todays_date = (str(datetime.datetime.today()))[:10]
         response = (response.json())  
 
-        if response['results'][2]['values'][0]['date'] == yesterdays_date:
+        if response['results'][2]['values'][0]['date'] == todays_date:
 
             mood_yesterday = response['results'][2]['values'][0]['value']
             
        
-        if response['results'][3]['values'][0]['date'] == yesterdays_date:
+        if response['results'][3]['values'][0]['date'] == todays_date:
 
             journal_yesterday = response['results'][3]['values'][0]['value']
             
         return mood_yesterday, journal_yesterday
 
     def get_sleep_data(self):
-        yesterdays_date = (str(datetime.datetime.today()))[:10]
+        todays_date = (str(datetime.datetime.today()))[:10]
         response = requests.get("https://exist.io/api/2/attributes/with-values",headers = {'Authorization': f"Token {config('EXIST_API_TOKEN')}"} )
-        yesterdays_date = (str(datetime.datetime.today()))[:10]
+        todays_date = (str(datetime.datetime.today()))[:10]
         response = (response.json())
 
-        if response['results'][7]['values'][0]['date'] == yesterdays_date:
-            wake_time = response['results'][7]['values'][0]['value'] 
+        responses =  response['results'][7]['values']
+        for response in responses:
+            
+            if response['date'] == todays_date:
+                wake_time = response['value'] 
             #in minutes from midnight
 
         wake_hour = (str(wake_time/60))[:1]
         wake_minutes = round(((int((str(wake_time/60))[2:4]))/100)*60)
         wake_string = wake_hour + ':' + str(wake_minutes) + 'am'
-
         
-        if response['results'][4]['values'][0]['date'] == yesterdays_date:
-
-            sleep_time = response['results'][4]['values'][0]['value'] 
+        response = requests.get("https://exist.io/api/2/attributes/with-values",headers = {'Authorization': f"Token {config('EXIST_API_TOKEN')}"} )
+        response =response.json()
+        responses =  response['results'][4]['values']
+        for response in responses:
+            if response['date'] == todays_date:
+        
+                sleep_time = response['value'] 
+        
 
         sleep_hours = (str(sleep_time/60))[:1]
         sleep_minutes = round(((int((str(sleep_time/60))[2:4]))/100)*60)
@@ -329,6 +357,27 @@ class ExistPipeline():
     
         return(sleep_string, wake_string)
 
-a=ExistPipeline()
-a.get_sleep_data()
 
+class AirTablePipeline():
+
+    def get_currently_reading_books(self):
+        token = config('TOKEN_API')
+        headers = {'Authorization': f"Bearer {token}"}
+
+        response = requests.get('https://api.airtable.com/v0/appgTS4jpfHcqPeXA/tblSXX2los7etnqI0', headers=headers)
+
+        response = response.json()
+        response = response['records']
+
+        currently_reading_covers = []
+
+        for item in response:
+            if item['fields']['Reading?'] == 'yes':
+                book_cover = item['fields']['cover']
+                currently_reading_covers.append(book_cover)
+                
+        return currently_reading_covers
+
+
+a=ExistPipeline()
+a.get_github_contributions()
