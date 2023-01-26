@@ -378,6 +378,24 @@ class AirTablePipeline():
                 
         return currently_reading_covers
 
+    def get_books_read_covers(self):
+        token = config('TOKEN_API')
+        headers = {'Authorization': f"Bearer {token}"}
 
-a=ExistPipeline()
-a.get_github_contributions()
+        response = requests.get('https://api.airtable.com/v0/appgTS4jpfHcqPeXA/tblSXX2los7etnqI0', headers=headers)
+
+        response = response.json()
+        response = response['records']
+
+        read_covers = []
+
+        for item in response:
+            if item['fields']['Reading?'] == 'no':
+                book_cover = item['fields']['cover']
+                read_covers.append(book_cover)
+                
+        return read_covers
+
+
+
+

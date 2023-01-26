@@ -1,9 +1,12 @@
+
 import importlib  
 import streamlit as st
 from streamlit_extras.mention import mention
 from streamlit_extras.colored_header import colored_header
 from streamlit_extras.app_logo import add_logo
 import requests
+
+
 
 from decouple import config
 from public_api_pipeline import *
@@ -13,7 +16,12 @@ import pickle
 add_logo("logo_transparent_background.png", height=150)
 from streamlit_extras.stoggle import stoggle
 
+
+
+
+
 DataPipeline = importlib.import_module('Data-Pipeline')
+a=DataPipeline.ExistPipeline()
 
 with open('footie', 'rb') as fb:
     football_widget = pickle.load(fb)
@@ -72,23 +80,27 @@ today = str(datetime.today())
 today = today[:10]
 col1.write(f"##### Today: :violet[*{today}*] | {temp_text} {condition} | ☀️{sunrise_text} |🌙{sunset_text}")
 
-col2.write(f'**{football_widget[3]}**')
+col2.write(f'+ **{football_widget[3]}**')
 
-a = DataPipeline.GoogleCalendarPipeline()
-todays_events = a.get_todays_events()
+b = DataPipeline.GoogleCalendarPipeline()
+todays_events = b.get_todays_events()
+
+recent_contributions = a.get_github_contributions()
+
+col1, col2, col3, col4, col5 = st.columns([6,2.2,2.2,1.5,1.5])
+col1.write(f'### Good {greeting}, Gabriella')  
+col1.markdown("**Today's Schedule**")
+col2.metric(label = ('Git Today:'), value = recent_contributions[1])
+col3.metric(label='Yesterday:', value=recent_contributions[0])
 
 
+col4.image(football_widget[1])
+col5.image(football_widget[2])
 
-
-
-col1, col2, col3 = st.columns([6,0.9,0.9])
-col1.write(f'#### Good {greeting}, Gabriella')  
-
-
-
-col2.image(football_widget[1])
-col3.image(football_widget[2])
 col1, col2 = st.columns([7,2])
+
+
+
 
 
 
@@ -135,7 +147,7 @@ def get_each_cal_event():
     return event_rows
 
 
-a=DataPipeline.ExistPipeline()
+
 
 mood_data = a.get_mood_data()
 mood_data = list(mood_data)
@@ -157,7 +169,7 @@ def get_mood_emoji(mood_data):
         mood_data[0] = '🤩'
     elif mood_data[0] <9 and mood_data[0] >= 7:
         mood_data[0] = '😆'
-    elif mood_data <7 and mood_data[0] >= 5:
+    elif mood_data[0] <7 and mood_data[0] >= 5:
         mood_data[0] = '🙂'   
     elif mood_data[0] <5 and mood_data[0] >=3:
         mood_data[0] = '😐'
@@ -185,16 +197,32 @@ with col3:
     
 col1, col2 = st.columns([7,2])
 
+b = DataPipeline.AirTablePipeline()
+currently_reading_covers = b.get_currently_reading_books()
+number_of_books_reading = len(currently_reading_covers)
+
+
+
+
+
+
 with col1:
+    st.write('')
+    st.write('')
     st.write('##### Goals for Today:')
 
     for i in range(0,3):
         st.text(f'{mood_data[1][1][i]}')
-
+    
+    st.write('')
+    st.write('')
     st.write('##### Yesterday Recap:')
 
     for i in range(0,3):
         st.text(f'{mood_data[1][0][i]}')
+
+
+    
     
 
 with col2:
@@ -208,3 +236,6 @@ with col2:
         if selection == mix:
             url = dj_mix_dict[mix]
     st_player(url=url, height=300, playing=False)
+
+
+st.write('tube status, ')
