@@ -157,7 +157,7 @@ st.markdown("<h3 style='text-align: center;color: black;'>Long Term</h3>", unsaf
 
 
 
-select = st.multiselect('What do you want to visualise?', ['Overall', 'Health', 'Productivity', 'Personal', 'Goal Score'], default =['Goal Score', 'Overall'])
+select = st.multiselect(label = 'What do you want to visualise?',options =['Overall', 'Health', 'Productivity', 'Personal', 'Goal Score'], default =['Goal Score', 'Overall'])
 
 fig = px.line(df, x='Days', y=select, color_discrete_sequence=[ "pink", "hotpink", "deeppink",  'plum', 'darkmagenta'])
 fig.update(layout_yaxis_range = [60,120])
