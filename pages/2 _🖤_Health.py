@@ -1,7 +1,7 @@
 import streamlit as st
 from streamlit_extras.stoggle import stoggle
 from streamlit_extras.app_logo import add_logo
-add_logo("logo_transparent_background.png", height=150)
+add_logo("logo_white_background.jpg", height=160)
 
 import plotly.express as px
 import pandas as pd
@@ -15,12 +15,10 @@ from streamlit_extras.metric_cards import style_metric_cards
 #style_metric_cards( border_left_color='#ff4bd0')
 
 
-st.write('### Health')
-st.write('')
-
 # yesterday
 
-
+st.markdown("<h1 style='text-align: center;color: black;'>Health Hub</h1>", unsafe_allow_html=True)
+st.write('')
 
 metric_list = ['Health', 'Steps Score', 'Active Cals Score', 'Diet', 'Goal Score']
 yesterdays_metrics = []
@@ -100,13 +98,14 @@ current_seven_day_vs_past_seven_day = get_percentage_change(metric_list, seven_d
 
 import streamlit_nested_layout
 
+date_range = st.select_slider(label = 'What date range would you like to see?', options = ['Yesterday', '3 Days', '7 Days'], label_visibility = 'collapsed')
 outer_cols = st.columns([6, 0.5, 1.3,1.3])
 
 with outer_cols[0]:
     
-    date_range = st.select_slider(label = 'What date range would you like to see?', options = ['Yesterday', '3 Days', '7 Days'], label_visibility = 'collapsed')
+    
     col1, col2, col3, col4 = st.columns([1.5,1.5,1.5,1.5])
-    style_metric_cards( border_left_color='#ff4bd0', border_size_px =2, border_color='#FFC0CB', border_radius_px=10)
+    style_metric_cards( border_left_color='#6F4E37', border_size_px =2, border_color='#ccbea3', border_radius_px=10)
     if date_range == '3 Days':
         
         col1.metric(label="Health", value=three_day_averages[0], delta=str(current_three_day_vs_past_three_day[0]) + '%')
@@ -127,105 +126,66 @@ with outer_cols[0]:
         col4.metric(label="Diet", value=yesterdays_metrics[3], delta=str(yesterday_vs_day_before_yesterday_percent_change[3]) + '%')
 
 with outer_cols[2]:
+
+
     st.write('')
-    st.write('')
-    st.write('')
-    st.write('')
-    st.write('')
-    
     st.metric(label='Weight', value = 58)
 
 with outer_cols[3]:
     st.write('')
-    st.write('')
-    st.write('')
-    st.write('')
-    st.write('')
     st.metric(label='Body-Fat %', value = 27)    
 
-col1, col2, col3 = st.columns([6,2,3.1])
 
-with col3:
-    with st.expander('Daily Goals', expanded=False):
+col1, col2, col3, col4 = st.columns([3,3, 2, 4])
+
+
+
+
+with col4:
+    st.write('')
+    st.write('')
+    st.write('')
+    with st.expander('**Daily Goals**', expanded=False):
         
-        st.write('10,000 Steps' +'  \n' + '550 Active Cals' +'  \n' + '5 Diet Score' +'  \n' + 'Cutting Phase')
+        st.write('10,000 Steps' +'  \n' + '550 Active Cals' +'  \n' + '5 Diet Score' +'  \n' + 'Deficit: Cutting Phase')
     
-        
+    with st.expander('**Long-Term Goals**', expanded=False):
+        st.markdown('15% Body Fat' +'  \n' + 'High VO<sub>2</sub>  Max' , unsafe_allow_html=True)
 
+
+
+with col1:
+
+
+        labels = ['Protein', 'Carbs', 'Fat']
+        values = [120, 60, 40]
+
+        fig = px.pie( title = 'Yesterday:',height = 290, values=values, labels=labels, width=250, names=labels, hole=0.7, color = labels, color_discrete_map={'Protein':'#6F4E37', 'Carbs': '#9c8268', 'Fat': '#ccbea3'})
+
+        st.plotly_chart(fig)
+
+with col2:
+        
+        labels = ['Protein', 'Carbs', 'Fat']
+        values = [50, 20, 30]
+
+        fig = px.pie(title = 'Goal:',height = 290, names = labels, values=values, labels=labels, width=250,  hole=0.7, color = labels, color_discrete_map={'Protein':'#6F4E37', 'Carbs': '#9c8268', 'Fat': '#ccbea3'})
+
+        st.plotly_chart(fig)
+        
 
 #score graph
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
 
 
 
-
-st.markdown("<h4 style='text-align: center;color: black;'>Long Term</h4>", unsafe_allow_html=True)
+    
 data_type = st.radio(label = 'ye', options = ['Score Adjusted Data', 'Raw Data'], horizontal = True, label_visibility = 'collapsed')
 
 if data_type == 'Score Adjusted Data':
     select = st.multiselect(label = 'ye', 
     options=['Health', 'Steps Score', 'Active Cals Score', 'Diet', 'Goal Score'], default = ['Health', 'Goal Score'], label_visibility='collapsed')
-
-    fig = px.line(df, x='Days', y=select, color_discrete_sequence=[ "pink", "hotpink", "deeppink",  'plum', 'darkmagenta'])
+    st.write('turn into pills')
+    fig = px.line(df, x='Days', y=select, color_discrete_sequence=[ "tan", "#9c8268", "sandybrown",  'maroon', 'darkorange'])
     fig.update(layout_yaxis_range = [50,140])
 
     st.plotly_chart(fig)
@@ -235,12 +195,14 @@ if data_type == 'Raw Data':
     options=[ 'Steps', 'Active Cals'])
 
     if select_raw == 'Steps':
-        figure = px.line(df, x='Days', y=['Steps', 'Steps Goal'], color_discrete_sequence=[ "pink", "hotpink",])
+        figure = px.line(df, x='Days', y=['Steps', 'Steps Goal'], color_discrete_sequence=[ "tan", "#9c8268",])
         figure.update(layout_yaxis_range = [4000,18000])
         st.plotly_chart(figure)
 
 
     if select_raw == 'Active Cals':
-        figure = px.line(df, x='Days', y=['Active Cals', 'Active Cals Goal'], color_discrete_sequence=[ "pink", "hotpink",])
+        figure = px.line(df, x='Days', y=['Active Cals', 'Active Cals Goal'], color_discrete_sequence=[ "tan", "#9c8268",])
         figure.update(layout_yaxis_range = [250,800])
         st.plotly_chart(figure)
+        
+st.write('V02 MAXsugar SAt fat')
