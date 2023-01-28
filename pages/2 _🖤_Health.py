@@ -18,6 +18,7 @@ from streamlit_extras.metric_cards import style_metric_cards
 # yesterday
 
 st.markdown("<h1 style='text-align: center;color: black;'>Health Hub</h1>", unsafe_allow_html=True)
+st.write('link to behind the scenes')
 st.write('')
 
 metric_list = ['Health', 'Steps Score', 'Active Cals Score', 'Diet', 'Goal Score']
@@ -152,6 +153,9 @@ with col4:
     with st.expander('**Long-Term Goals**', expanded=False):
         st.markdown('15% Body Fat' +'  \n' + 'High VO<sub>2</sub>  Max' , unsafe_allow_html=True)
 
+    with st.expander('random', expanded=False):
+        st.markdown('15% Body Fat' +'  \n' + 'High VO<sub>2</sub>  Max' , unsafe_allow_html=True)
+
 
 
 with col1:
@@ -176,15 +180,19 @@ with col2:
 
 #score graph
 
+from streamlit_pills import pills
+selected = pills("What to visualise", ["Health", "Steps", "Active Cals", "Diet", "Steps Raw", 'Active Cals Raw', 'Total Cals Burned', 'VO2 Max', 'Weight', 'Body-Fat %', 'Net Calories'], ["💪🏾", "🚶🏽‍♀️", "🔋", "🥗", '🚶🏽‍♀️', '🔋', '⚡', '🫀', '⚖️','📉', '🥅' ])
+st.write(selected)
 
-
+fig = px.line(df, x='Days', y =selected)
+st.plotly_chart(fig)
     
 data_type = st.radio(label = 'ye', options = ['Score Adjusted Data', 'Raw Data'], horizontal = True, label_visibility = 'collapsed')
 
 if data_type == 'Score Adjusted Data':
     select = st.multiselect(label = 'ye', 
     options=['Health', 'Steps Score', 'Active Cals Score', 'Diet', 'Goal Score'], default = ['Health', 'Goal Score'], label_visibility='collapsed')
-    st.write('turn into pills')
+    st.write('turn into pills and not select altogether')
     fig = px.line(df, x='Days', y=select, color_discrete_sequence=[ "tan", "#9c8268", "sandybrown",  'maroon', 'darkorange'])
     fig.update(layout_yaxis_range = [50,140])
 
@@ -206,3 +214,6 @@ if data_type == 'Raw Data':
         st.plotly_chart(figure)
         
 st.write('V02 MAXsugar SAt fat')
+
+
+#rename health column to health score
