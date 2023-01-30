@@ -10,8 +10,7 @@ from decouple import config
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
-from pyicloud import PyiCloudService
-from shutil import copyfileobj
+
 from todoist_api_python.api import TodoistAPI
 
 
@@ -178,7 +177,11 @@ class TodoistPipeline:
         collated_lists = self.collate_categories()
         self.find_percentages_of_completed(collated_lists)
 
+import pandas as pd
+import plotly.express as px
 
+df = pd.read_csv('Database.csv')
+number_of_entries = len(df)
 class GoogleCalendarPipeline:
 
     def __init__(self):
@@ -216,7 +219,7 @@ class ExistPipeline():
         response = requests.get("https://exist.io/api/1/users/gabriellamartin/attributes/commits/", 
                 headers = {'Authorization': f"Token {config('EXIST_API_TOKEN')}"} )
         todays_date = (str(datetime.datetime.today()))[:10]
-        yesterdays_date = (str(datetime.datetime.today() - timedelta(1)))[:10]
+        
         response = (response.json())  
 
         responses =  response['results']
@@ -225,13 +228,21 @@ class ExistPipeline():
             if response['date'] == todays_date:
                 todays_commits = response['value'] 
                 
-
-            elif response['date'] == yesterdays_date:
-                yesterdays_commits = response['value']
         
-        return yesterdays_commits, todays_commits
+        return todays_commits
 
+    def get_todays_streak(self):
+        todays_commits = self.get_github_contributions()
+        yesterdays_streak = df.iloc[number_of_entries -1]['GitHub Streak']
+        if todays_commits != 0:
+            todays_streak = yesterdays_streak + 1
+        else:
+            todays_streak = 0 
+        
 
+        return todays_commits, todays_streak
+
+# wrote to csv
 
     def get_mood_data(self):
         todays_date = (str(datetime.datetime.today()))[:10]
@@ -297,15 +308,18 @@ class AirTablePipeline():
         response = response['records']
 
         currently_reading_covers = []
+        currently_reading_percentages = []
 
         for item in response:
-            if item['fields']['Reading?'] == 'yes':
-                book_cover = item['fields']['cover']
+            if int(item['fields']['% Complete']) != 100:
+                book_cover = item['fields']['Cover']
                 currently_reading_covers.append(book_cover)
+                percent_complete = item['fields']['% Complete']
+                currently_reading_percentages.append(percent_complete)
                 
-        return currently_reading_covers
+        return currently_reading_covers, currently_reading_percentages
 
-    def get_books_read_covers(self):
+'''    def get_books_read_covers(self):
         token = config('TOKEN_API')
         headers = {'Authorization': f"Bearer {token}"}
 
@@ -322,7 +336,17 @@ class AirTablePipeline():
                 read_covers.append(book_cover)
                 
         return read_covers
+'''
 
 
+class WakaTimePipeline:
 
+    def get_total_time_spent_coding_today(self):
+        api_key = config('WAKATIME_API_KEY')
+        url = f'https://wakatime.com/api/v1/users/gabriella01/summaries?api_key={api_key}&range=today'  
+        response = requests.get(url)
+        response = response.json()
+        response = response['data'][0]['grand_total']
+        time_in_decimal_format = response['decimal']
+        return time_in_decimal_format
 
