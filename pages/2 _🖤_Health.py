@@ -21,81 +21,15 @@ st.markdown("<h1 style='text-align: center;color: black;'>Health Hub</h1>", unsa
 
 st.write('')
 
-metric_list = ['Health', 'Steps Score', 'Active Cals Score', 'Diet', 'Goal Score', 'Weight', 'Body-Fat %']
-yesterdays_metrics = []
 
-def get_yesterdays_metric(metric_list):
-    for i in metric_list:
-        yesterday_metric = df.iloc[number_of_entries -1][i]
-        yesterdays_metrics.append(yesterday_metric)
-    return yesterdays_metrics
-
-yesterdays_metrics = get_yesterdays_metric(metric_list)
-
-yesterday_vs_day_before_yesterday_percent_change = []
-
-def get_percentage_change(metric_list, yesterdays_metrics):
-    for index, value in enumerate(yesterdays_metrics):
-        percent_change = round((((value - (df.iloc[number_of_entries-2])[metric_list[index]]))/((df.iloc[number_of_entries-2])[metric_list[index]]))*100)
-        yesterday_vs_day_before_yesterday_percent_change.append(percent_change)
-    return yesterday_vs_day_before_yesterday_percent_change
-
-yesterday_vs_day_before_yesterday_percent_change = get_percentage_change(metric_list, yesterdays_metrics)
-
-# three day and seven day
-
-
-def get_three_day_average():
-  three_day_averages = []
-  for category in metric_list:
-    yesterday_metric = df.iloc[number_of_entries -1][category]
-    yesterday_minusone_metric = df.iloc[number_of_entries -2][category]
-    yesterday_minustwo_metric = df.iloc[number_of_entries -3][category]
-    three_day_average =round((yesterday_metric + yesterday_minusone_metric + yesterday_minustwo_metric)/3)
-    three_day_averages.append(three_day_average)
-  return three_day_averages
-
-three_day_averages = get_three_day_average()
-current_three_day_vs_past_three_day = []
-three_day_percent_change = []
-
-def get_percentage_change(metric_list, three_day_averages):
-    for index, value in enumerate(three_day_averages):
-        three_day_earlier_average = ((((df.iloc[number_of_entries-4])[metric_list[index]]) + (df.iloc[number_of_entries-5][metric_list[index]]) + (df.iloc[number_of_entries-6])[metric_list[index]]))/3
-        percent_change = round((((value - three_day_earlier_average))/three_day_earlier_average)*100)
-        current_three_day_vs_past_three_day.append(percent_change)
-    return current_three_day_vs_past_three_day
-    
-current_three_day_vs_past_three_day = get_percentage_change(metric_list, three_day_averages)
-    
-def get_seven_day_metric():
-    seven_day_averages = []
-    for category in metric_list:
-        yesterday_metric = df.iloc[number_of_entries -1][category]
-        yesterday_minusone_metric = df.iloc[number_of_entries -2][category]
-        yesterday_minustwo_metric = df.iloc[number_of_entries -3][category]
-        yesterday_minusthree_metric = df.iloc[number_of_entries -4][category]
-        yesterday_minusfour_metric = df.iloc[number_of_entries -5][category]
-        yesterday_minusfive_metric = df.iloc[number_of_entries -6][category]
-        yesterday_minussix_metric = df.iloc[number_of_entries -7][category]
-        seven_day_average =round((yesterday_metric + yesterday_minusone_metric + yesterday_minustwo_metric  + yesterday_minusthree_metric +
-        yesterday_minusfour_metric + yesterday_minusfive_metric + yesterday_minussix_metric )/7)
-        seven_day_averages.append(seven_day_average)
-    return seven_day_averages
-
-seven_day_averages = get_seven_day_metric()
-current_seven_day_vs_past_seven_day = []
-seven_day_percent_change = []
-
-def get_percentage_change(metric_list, seven_day_averages):
-    for index, value in enumerate(seven_day_averages):
-        seven_day_earlier_average = ((((df.iloc[number_of_entries-8])[metric_list[index]]) + (df.iloc[number_of_entries-9][metric_list[index]]) + (df.iloc[number_of_entries-10])[metric_list[index]]) + 
-        (df.iloc[number_of_entries-11][metric_list[index]]) + (df.iloc[number_of_entries-12][metric_list[index]]) + (df.iloc[number_of_entries-13][metric_list[index]]) + (df.iloc[number_of_entries-14][metric_list[index]]) )/7
-        percent_change = round((((value - seven_day_earlier_average))/seven_day_earlier_average)*100)
-        current_seven_day_vs_past_seven_day.append(percent_change)
-    return current_seven_day_vs_past_seven_day
-    
-current_seven_day_vs_past_seven_day = get_percentage_change(metric_list, seven_day_averages)
+import important_metrics as im
+productivity_metrics = im.ImportantMetrics(metric_list = ['Health', 'Steps Score', 'Active Cals Score', 'Diet', 'Goal Score', 'Weight', 'Body-Fat %'])
+yesterdays_metrics = productivity_metrics.get_yesterdays_metrics()
+yesterday_vs_day_before_yesterday_percent_change = productivity_metrics.get_yesterday_percentage_change()
+three_day_averages = productivity_metrics.get_three_day_averages()
+current_three_day_vs_past_three_day = productivity_metrics.get_three_day_percentage_change()
+seven_day_averages = productivity_metrics.get_seven_day_averages()
+current_seven_day_vs_past_seven_day = productivity_metrics.get_seven_day_percentage_change()
 
 
 import streamlit_nested_layout
@@ -211,7 +145,9 @@ from streamlit_agraph import agraph, Node, Edge, Config
 with st.expander('**Behind The Scenes**', expanded=False):
         
     with st.expander('**Data Details**', expanded=False):
-        st.write('yo')
+        st.write('')
+
+        # put in own file
     with st.expander('**Data Pipeline**', expanded=False):
 
         nodes = []
