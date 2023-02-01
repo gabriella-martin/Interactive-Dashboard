@@ -1,3 +1,4 @@
+import base64
 import csv
 import datetime
 import os.path
@@ -350,3 +351,39 @@ class WakaTimePipeline:
         time_in_decimal_format = response['decimal']
         return time_in_decimal_format
 
+
+class SpotifyPipeline:
+
+    def __init__(self):
+        self.spotify_id = config('SPOTIFY_CLIENT_ID')    
+        self.spotify_secret = config('SPOTIFY_CLIENT_SECRET') 
+        self.refresh_token = config('SPOTIFY_REFRESH_TOKEN')
+    
+
+    def get_new_token(self): 
+        encoded = base64.b64encode((self.spotify_id + ":" + self.spotify_secret).encode("ascii")).decode("ascii")
+        url = f'https://accounts.spotify.com/api/token?grant_type=refresh_token&refresh_token={self.refresh_token}'
+        headers = {f"Content-Type" : "application/x-www-form-urlencoded", "Authorization": "Basic " + encoded }
+        response = requests.post(url, headers=headers)
+        response= response.json()
+        access_token = response['access_token']
+        return access_token
+
+    def get_top_tracks(self):
+        access_token = self.get_new_token()
+        
+        headers = {
+            'Content-Type': 'application/json',"Authorization": f"Bearer {access_token}"
+        }
+
+        response = requests.get('https://api.spotify.com/v1/me/top/tracks?limit=3&time_range=short_term', headers=headers)
+        
+        items = ((response.json())['items'])
+        top_songs = [[], [], []]
+        for index, item in enumerate(items):
+            top_songs[index].append(item['name'])
+            top_songs[index].append(item['artists'][0]['name'])
+            top_songs[index].append(item['album']['images'][0]['url'])
+
+        return top_songs
+            
