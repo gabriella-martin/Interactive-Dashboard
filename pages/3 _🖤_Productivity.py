@@ -12,8 +12,8 @@ from streamlit_extras.stoggle import stoggle
 
 st.markdown("<h1 style='text-align: center;color: black;'>Productivity Hub</h1>", unsafe_allow_html=True)
 st.write('')
-st.write('')
-st.write('')
+
+
 # yesterday
 
 
@@ -38,7 +38,7 @@ currently_reading = a.get_currently_reading_books()
 
 
 import important_metrics as im
-productivity_metrics = im.ImportantMetrics(metric_list = ['Productivity', 'Work Score', 'Reading Score', 'GitHub Contributions', 'Coding Time Decimal'])
+productivity_metrics = im.ImportantMetrics(metric_list = ['Productivity', 'Work Score', 'Reading Score', 'GitHub Contributions', 'Coding Time'])
 yesterdays_metrics = productivity_metrics.get_time_period_metric(1)
 yesterday_vs_day_before_yesterday_percent_change = productivity_metrics.get_time_period_percent_change(1)
 three_day_averages = productivity_metrics.get_time_period_metric(3)
@@ -95,7 +95,7 @@ with outer_cols[2]:
         st.write('') 
 
 
-    with st.expander('📖 Currently Reading', expanded=False):
+    with st.expander('📖 **Currently Reading**', expanded=False):
     
         col1,col2,col3= st.columns(3)
 
@@ -164,11 +164,11 @@ elif date_range == '7 Days':
 
 
 st.write('')
-figure = px.pie(title='Work Hours Split',height = 400, values=values, labels=labels, width=250,  hole=0.7, color = labels, color_discrete_map={labels[0]:'#6F4E37', labels[1]: '#9c8268'})
+figure = px.pie(title='Work Hours Split',height = 395, values=values, labels=labels, width=250,  hole=0.7, color = labels, color_discrete_map={labels[0]:'#6F4E37', labels[1]: '#9c8268'})
 outer_columns =st.columns(2)
 with outer_columns[0]:
 
-    with st.expander('**😺🐙 GitHub Statistics**', expanded=True):
+    with st.expander('**😺 GitHub Statistics**', expanded=False):
         col1, col2 = st.columns(2)
         col1.write('')
         col2.write('')
@@ -191,7 +191,7 @@ with outer_columns[0]:
 
 with outer_columns[1]:
     
-    expand =st.expander('**💻 Coding Statistics**', expanded=True)
+    expand =st.expander('**💻 Coding Statistics**', expanded=False)
 
     with expand:
         st.write('')
@@ -243,54 +243,23 @@ with col2:
     chart_2 = st.plotly_chart(fig, use_container_width=True)
 
 style_metric_cards( border_left_color='#6F4E37', border_size_px =2, border_color='#ccbea3', border_radius_px=10)
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
-st.write('')
+
+from streamlit_pills import pills
+selected = pills('What to visualise', ['Productivity', 'Work Score', 'Reading Score', 'Work Hours', 'Reading Hours', 'Coding Time', 'GitHub Contributions'], ['🏹', '👩🏽‍💻', '📖','👩🏽‍💻', '📖', '⌨️', '😺'], label_visibility='collapsed')
+
+
+
+if selected == 'Productivity' or selected == 'Work Score' or selected == 'Reading Score':
+    fig = px.line(df, x='Days', y =[selected, 'Goal Score'], color_discrete_sequence=[ "#6F4E37", "#9c8268"])
+    fig.update(layout_yaxis_range = [50,130])
+    st.plotly_chart(fig, use_container_width=True)
+
+else:
+    fig = px.line(df, x='Days', y =selected, color_discrete_sequence= ["#6F4E37"])
+    st.plotly_chart(fig, use_container_width=True)  
+
+
+
 
  
 
@@ -304,38 +273,5 @@ st.write('')
 
 
 
-
-st.markdown("<h4 style='text-align: center;color: black;'>Long Term</h4>", unsafe_allow_html=True)
-data_type = st.radio(label = '', options = ['Score Adjusted Data', 'Raw Data'], horizontal = True, label_visibility = 'collapsed')
-
-if data_type == 'Score Adjusted Data':
-    select = st.multiselect(label = '', options = ['Productivity', 'Work Score', 'Reading Score', 'Goal Score'], default=['Productivity', 'Goal Score'], label_visibility = 'collapsed')
-
-
-    fig = px.line(df, x='Days', y=select, color_discrete_sequence=[ "pink", "hotpink", "deeppink"])
-    fig.update(layout_yaxis_range = [50,120])
-    fig.update_layout( xaxis_title = 'Day', yaxis_title = 'Score')
-
-    st.plotly_chart(fig)
-
-if data_type == 'Raw Data':
-#raw data
-
-
-    select_raw = st.selectbox(label = '', options=[ 'Work Hours', 'Reading Hours'], label_visibility='collapsed')
-
-    if select_raw == 'Work Hours':
-        figure = px.line(df, x='Days', y=['Work Hours', 'Work Hours Goal'] , color_discrete_sequence=[ "pink", "hotpink"])
-        figure.update(layout_yaxis_range = [0,14])
-        figure.update_layout( xaxis_title = 'Day', yaxis_title = 'Hours')
-        st.plotly_chart(figure)
-        
-
-
-    if select_raw == 'Reading Hours':
-        figure = px.line(df, x='Days', y=['Reading Hours', 'Reading Hours Goal'], color_discrete_sequence=[  "pink", "hotpink"])
-        figure.update(layout_yaxis_range = [-5,6])
-        figure.update_layout( xaxis_title = 'Day', yaxis_title = 'Hours')
-        st.plotly_chart(figure)
 
 

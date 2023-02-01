@@ -24,12 +24,12 @@ st.write('')
 
 import important_metrics as im
 productivity_metrics = im.ImportantMetrics(metric_list = ['Health', 'Steps Score', 'Active Cals Score', 'Diet', 'Goal Score', 'Weight', 'Body-Fat %'])
-yesterdays_metrics = productivity_metrics.get_yesterdays_metrics()
-yesterday_vs_day_before_yesterday_percent_change = productivity_metrics.get_yesterday_percentage_change()
-three_day_averages = productivity_metrics.get_three_day_averages()
-current_three_day_vs_past_three_day = productivity_metrics.get_three_day_percentage_change()
-seven_day_averages = productivity_metrics.get_seven_day_averages()
-current_seven_day_vs_past_seven_day = productivity_metrics.get_seven_day_percentage_change()
+yesterdays_metrics = productivity_metrics.get_time_period_metric(1)
+yesterday_vs_day_before_yesterday_percent_change = productivity_metrics.get_time_period_percent_change(1)
+three_day_averages = productivity_metrics.get_time_period_metric(3)
+current_three_day_vs_past_three_day = productivity_metrics.get_time_period_percent_change(3)
+seven_day_averages = productivity_metrics.get_time_period_metric(7)
+current_seven_day_vs_past_seven_day = productivity_metrics.get_time_period_percent_change(7)
 
 
 import streamlit_nested_layout
