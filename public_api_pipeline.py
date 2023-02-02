@@ -1,10 +1,10 @@
-from decouple import config 
-
 
 import requests 
 import pickle
 import datetime
 from datetime import datetime
+from decouple import config 
+
 def get_manutd_next_game_data():
     url = "https://api-football-v1.p.rapidapi.com/v3/fixtures"
     querystring = {"team":"33","next":"1"}
@@ -29,7 +29,7 @@ def format_date(response):
 
         #change date to uk format (DD/MM/YY)
     format_date_with_datetime = (datetime.strptime(date, '%Y-%m-%d'))
-    format_date_to_uk_format = format_date_with_datetime.strftime('%a-%d-%B')
+    format_date_to_uk_format = format_date_with_datetime.strftime('%a-%d-%b')
 
     format_date_and_time = format_date_to_uk_format + ' @ ' + format_time_12hr
     return format_date_and_time
@@ -60,10 +60,6 @@ football_widget = football_api_process()
 with open('footie', 'wb') as fb:
     pickle.dump(football_widget, fb)
 
-
-
-
-
 def get_weather():
   key = config('WEATHER_API_KEY')
   url = f'https://api.openweathermap.org/data/3.0/onecall?lat=51.46&lon=0.01&exclude=minutely,hourly,daily,alerts&appid={key}&units=metric'
@@ -79,3 +75,52 @@ def get_weather():
 
   return(sunrise_time, sunset_time, temperature, condition)
 
+def get_condition_emoji():
+    description = get_weather()[3]
+    if 'Thunderstorm' in description:
+        condition_emoji = '⚡'
+    elif 'Drizzle' in description:
+        condition_emoji ='💧'
+    elif 'Rain' in description:
+        condition_emoji ='🌧️'
+    elif 'Snow' in description:
+        condition_emoji ='❄️'
+    elif 'Clear Sky' in description:
+        condition_emoji = '🌤'
+    elif 'Clouds' in description:
+        condition_emoji ='️🌥'
+    else:
+        condition_emoji = '🌫️'
+        
+    return condition_emoji
+
+
+def get_tube_status():
+    app_key = config('TFL_KEY')
+    url = f"https://api.tfl.gov.uk/Line/dlr/Status?detail=true&?app_key={app_key}"
+
+    response = requests.get(url)
+    response = response.json()
+    dlr_status = response[0]['lineStatuses'][0]["statusSeverityDescription"]
+    return dlr_status
+
+def tube_status_emoji():
+    dlr_status = get_tube_status()
+    if 'Good' in dlr_status:
+        dlr_status = '✅ ' + dlr_status
+    elif 'Minor' in dlr_status:
+        dlr_status = '⏰ ' + dlr_status
+    elif 'Severe' or 'Suspended' in dlr_status:
+        dlr_status = '⚠️ ' + dlr_status
+    elif 'closure' in dlr_status:
+        dlr_status = '⛔ ' + dlr_status
+
+    return dlr_status
+
+
+
+def nasa_image_of_the_day():
+    url = 'https://api.nasa.gov/planetary/apod?api_key=PZcnX4xvaDZt6n394qdhjTT9p9Jvwex3oTqMofpt'
+    response = requests.get(url)
+    nasa_image = (response.json())['hdurl']
+    return nasa_image
