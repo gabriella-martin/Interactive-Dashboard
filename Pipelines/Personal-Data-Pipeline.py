@@ -154,4 +154,4 @@ mood_today = exist.get_mood_data()
 
 percentages_list.append(mood_today)
 
-percentage_list_columns = ['Cleaning', 'Dogs', 'Self-Care, 'Mood']
+percentage_list_columns = ['Cleaning', 'Dogs', 'Self-Care', 'Mood']

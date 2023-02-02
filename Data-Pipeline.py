@@ -1,6 +1,7 @@
 import base64
 import datetime
 import requests
+import streamlit as st
 
 from decouple import config
 from todoist_api_python.api import TodoistAPI
@@ -8,7 +9,7 @@ from todoist_api_python.api import TodoistAPI
 class TodoistPipeline:
 
     def __init__(self):
-        api = TodoistAPI(config('TODOIST_API_KEY'))
+        api = TodoistAPI(st.secrets['TODOIST_AP_KEY'])
         self.tasks = api.get_tasks()
 
     def get_todays_tasks(self):
@@ -27,7 +28,7 @@ class TodoistPipeline:
 class AirTablePipeline:
 
     def get_currently_reading_books(self):
-        token = config('TOKEN_API')
+        token = st.secrets['AIRTABLE_TOKEN_API']
         headers = {'Authorization': f"Bearer {token}"}
 
         response = requests.get('https://api.airtable.com/v0/appgTS4jpfHcqPeXA/tblSXX2los7etnqI0', headers=headers)
@@ -48,7 +49,7 @@ class AirTablePipeline:
         return currently_reading_covers, currently_reading_percentages
 
     def get_books_read_covers(self):
-        token = config('TOKEN_API')
+        token = st.secrets['AIRTABLE_TOKEN_API']
         headers = {'Authorization': f"Bearer {token}"}
 
         response = requests.get('https://api.airtable.com/v0/appgTS4jpfHcqPeXA/tblSXX2los7etnqI0', headers=headers)
@@ -69,9 +70,9 @@ class AirTablePipeline:
 class SpotifyPipeline:
 
     def __init__(self):
-        self.spotify_id = config('SPOTIFY_CLIENT_ID')    
-        self.spotify_secret = config('SPOTIFY_CLIENT_SECRET') 
-        self.refresh_token = config('SPOTIFY_REFRESH_TOKEN')
+        self.spotify_id = st.secrets['SPOTIFY_CLIENT_ID']
+        self.spotify_secret = st.secrets['SPOTIFY_CLIENT_SECRET'] 
+        self.refresh_token = st.secrets['SPOTIFY_REFRESH_TOKEN']
     
 
     def get_new_token(self): 

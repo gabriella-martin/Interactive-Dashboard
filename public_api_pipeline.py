@@ -2,13 +2,14 @@
 import requests 
 import pickle
 import datetime
+import streamlit as st
 from datetime import datetime
 from decouple import config 
 
 def get_manutd_next_game_data():
     url = "https://api-football-v1.p.rapidapi.com/v3/fixtures"
     querystring = {"team":"33","next":"1"}
-    headers = {"X-RapidAPI-Key": config('FOOTBALL_API_KEY'), "X-RapidAPI-Host": "api-football-v1.p.rapidapi.com"}
+    headers = {"X-RapidAPI-Key": st.secrets['FOOTBALL_API_KEY'], "X-RapidAPI-Host": "api-football-v1.p.rapidapi.com"}
     response = requests.request("GET", url, headers=headers, params=querystring)
     response = response
     return response
@@ -61,7 +62,7 @@ with open('footie', 'wb') as fb:
     pickle.dump(football_widget, fb)
 
 def get_weather():
-  key = config('WEATHER_API_KEY')
+  key = st.secrets['WEATHER_API_KEY']
   url = f'https://api.openweathermap.org/data/3.0/onecall?lat=51.46&lon=0.01&exclude=minutely,hourly,daily,alerts&appid={key}&units=metric'
   response = (requests.get(url)).json()
   json_response = response
@@ -96,7 +97,7 @@ def get_condition_emoji():
 
 
 def get_tube_status():
-    app_key = config('TFL_KEY')
+    app_key = st.secrets['TFL_KEY']
     url = f"https://api.tfl.gov.uk/Line/dlr/Status?detail=true&?app_key={app_key}"
 
     response = requests.get(url)
