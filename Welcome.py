@@ -1,32 +1,50 @@
 
-import importlib  
-import streamlit as st
-from streamlit_extras.mention import mention
-from streamlit_extras.colored_header import colored_header
-from streamlit_extras.app_logo import add_logo
-import requests
-
-
-
-from decouple import config
-from public_api_pipeline import *
-from streamlit_player import st_player
-import random
+import important_metrics as im
+import importlib 
 import pickle
-add_logo("logo_transparent_background.png", height=150)
-from streamlit_extras.stoggle import stoggle
+import public_api_pipeline
+import random
+import streamlit as st
+import streamlit_nested_layout
 
+st.set_page_config(
+    page_title="Gabriella's Dashboard",
+    page_icon="",
+    layout="wide")
+    
+from datetime import datetime
+from streamlit_extras.app_logo import add_logo
+from streamlit_extras.let_it_rain import rain
+from streamlit_extras.metric_cards import style_metric_cards
+from streamlit_player import st_player
 
+add_logo("logo_white_background.jpg", height=150)
+style_metric_cards( border_left_color='#6F4E37', border_size_px =2, border_color='#ccbea3', border_radius_px=10)
 
+metric_list = ['Overall', 'Health', 'Productivity', 'Personal']
 
+overall_metrics = im.ImportantMetrics(metric_list=metric_list)
 
 DataPipeline = importlib.import_module('Data-Pipeline')
-a=DataPipeline.ExistPipeline()
+
+a=DataPipeline.TodoistPipeline()
+todays_tasks = a.get_todays_tasks()
+a=DataPipeline.SpotifyPipeline()
+currently_playing = a.get_currently_playing()
+nasa_image = public_api_pipeline.nasa_image_of_the_day()
+
+yesterdays_metrics = overall_metrics.get_time_period_metric(1)
+yesterday_vs_day_before_yesterday_percent_change = overall_metrics.get_time_period_percent_change(1)
+three_day_averages = overall_metrics.get_time_period_metric(3)
+current_three_day_vs_past_three_day = overall_metrics.get_time_period_percent_change(3)
+seven_day_averages = overall_metrics.get_time_period_metric(7)
+current_seven_day_vs_past_seven_day = overall_metrics.get_time_period_percent_change(7)
 
 with open('footie', 'rb') as fb:
     football_widget = pickle.load(fb)
 
-st.write("# Personal Dashboard")
+weather  = public_api_pipeline.get_weather()
+dlr_status = public_api_pipeline.tube_status_emoji()
 
 today = str(datetime.now())
 hour = today[10:13]
@@ -42,200 +60,113 @@ def get_greeting(hour):
         greeting ='Evening'
     return greeting
     
-
 greeting = get_greeting(hour)
 
-#medium_link = mention(label='Medium Article', icon='✍🏽', url='https://google.com')
-
-from public_api_pipeline import *
-weather  = get_weather()
+st.write(f'# Good {greeting}, Gabriella')
+st.write('')
 
 sunrise_text = (str(weather[0]) + 'am')
 sunset_text = (str(weather[1]) + 'pm')
 temp_text = str(weather[2]) +  '\N{DEGREE SIGN}' + 'C'
-description = weather[3]
-
-def get_condition_emoji(description):
-    if 'Thunderstorm' in description:
-        condition_emoji = '⚡'
-    elif 'Drizzle' in description:
-        condition_emoji ='💧'
-    elif 'Rain' in description:
-        condition_emoji ='🌧️'
-    elif 'Snow' in description:
-        condition_emoji ='❄️'
-    elif 'Clear Sky' in description:
-        condition_emoji = '🌤'
-    elif 'Clouds' in description:
-        condition_emoji ='️🌥'
-    else:
-        condition_emoji = '🌫️'
-        
-    return condition_emoji
-
-condition = get_condition_emoji(description)
+condition = public_api_pipeline.get_condition_emoji()
 
 col1, col2 = st.columns([7,2])
 today = str(datetime.today())
 today = today[:10]
-col1.write(f"##### Today: :violet[*{today}*] | {temp_text} {condition} | ☀️{sunrise_text} |🌙{sunset_text}")
-
-col2.write(f'+ **{football_widget[3]}**')
-
-b = DataPipeline.GoogleCalendarPipeline()
-todays_events = b.get_todays_events()
-
-recent_contributions = a.get_github_contributions()
-
-col1, col2, col3, col4, col5 = st.columns([6,2.2,2.2,1.5,1.5])
-col1.write(f'### Good {greeting}, Gabriella')  
-col1.markdown("**Today's Schedule**")
-col2.metric(label = ('Git Today:'), value = recent_contributions[1])
-col3.metric(label='Yesterday:', value=recent_contributions[0])
+col1.write(f"##### Today: :violet[*{today}*] | {temp_text} {condition} | ☀️{sunrise_text} |🌙{sunset_text} | 🚆 DLR: {dlr_status}")
+col1.write('')
+col1.write('')
 
 
-col4.image(football_widget[1])
-col5.image(football_widget[2])
+outer_cols = st.columns([13, 4])
 
-col1, col2 = st.columns([7,2])
+with outer_cols[0]:
 
+    col1,col2 = st.columns([7,3])
+    col1.image(nasa_image, caption='NASA Image of the Day', width=450, use_column_width=True)
+    with col2:
+        with st.expander("☑️ **Today's Tasks**", expanded=True):
 
+            for task in todays_tasks:
+                st.write(task)
 
-
-
-
-
-def get_quote():
-    url = 'https://stoicquotesapi.com/v1/api/quotes/random'
-    response = requests.get(url)
-    quote = (response.json()).get('body')
+    date_range = st.select_slider(label = 'What date range would you like to see?', options = ['Yesterday', '3 Days', '7 Days'], label_visibility = 'collapsed')
     
+    if date_range == '3 Days':
 
-get_quote()
-
-def nasa_image_of_the_day():
-    url = 'https://api.nasa.gov/planetary/apod?api_key=PZcnX4xvaDZt6n394qdhjTT9p9Jvwex3oTqMofpt'
-    response = requests.get(url)
-    nasa_image = (response.json())['hdurl']
-    st.image(nasa_image, caption='NASA Image of the Day', width=150)
-
-def get_calendar_emoji():
-    for event in todays_events:
-        if 'Dog' in event[0]:
-            event[0] = '🐾 ' + event[0]
-        elif 'Gym' in event[0]:
-            event[0] = '💣 ' + event[0]
-        elif 'Work' in event[0]:
-            event[0] = '👩🏽‍💻 ' + event[0]
-        elif 'Clean' in event[0]:
-            event[0] = '🧽 ' + event[0]
-    return todays_events
-
-
-todays_events = get_calendar_emoji()
-
-number_of_events_today = len(todays_events)
-from annotated_text import annotated_text, annotation
-
-def get_each_cal_event():
-    event_rows = []
-    for i in range(0,number_of_events_today):
-        time_of_day = (todays_events)[i][1] + '-' + (todays_events)[i][2]
-        name_of_event = todays_events[i][0]
-        event_row = annotated_text("", (name_of_event, time_of_day, '#f7dfeb', "5px black"))
-        event_rows.append(event_row)
-    return event_rows
-
-
-
-
-mood_data = a.get_mood_data()
-mood_data = list(mood_data)
-sleep_data = a.get_sleep_data()
-
-def get_recap_and_overview(mood_data):
-    mood_data[1] =mood_data[1].split(',')
-    mood_data[1][0] = mood_data[1][0].split('/')
-    mood_data[1][1] = mood_data[1][1].split('/')
-    return mood_data[1]
-
-
-mood_data[1] = get_recap_and_overview(mood_data)
-
-
-
-def get_mood_emoji(mood_data):
-    if mood_data[0] == 9:
-        mood_data[0] = '🤩'
-    elif mood_data[0] <9 and mood_data[0] >= 7:
-        mood_data[0] = '😆'
-    elif mood_data[0] <7 and mood_data[0] >= 5:
-        mood_data[0] = '🙂'   
-    elif mood_data[0] <5 and mood_data[0] >=3:
-        mood_data[0] = '😐'
-    else:
-        mood_data[0] ='😶'
-    return mood_data[0]
-
-mood_data[0] = get_mood_emoji(mood_data)
-
-col1, col2, col3 = st.columns([7,7,4])
-with col1:
-
-    event_rows = get_each_cal_event()
+        col1, col2, col3, col4 = st.columns(4)
+        col1.metric(label="Overall", value=three_day_averages[0], delta=str(current_three_day_vs_past_three_day[0]) + '%')
+        col2.metric(label="Health", value=three_day_averages[1], delta=str(current_three_day_vs_past_three_day[1]) + '%')
+        col3.metric(label="Productivity", value=three_day_averages[2], delta=str(current_three_day_vs_past_three_day[2]) + '%')
+        col4.metric(label="Personal", value=three_day_averages[3], delta=str(current_three_day_vs_past_three_day[3]) + '%')
     
+    if date_range == '7 Days':
+
+        col1, col2, col3, col4 = st.columns(4)
+        col1.metric(label="Overall", value=seven_day_averages[0], delta=str(current_seven_day_vs_past_seven_day[0]) + '%')
+        col2.metric(label="Health", value=seven_day_averages[1], delta=str(current_seven_day_vs_past_seven_day[1]) + '%')
+        col3.metric(label="Productivity", value=seven_day_averages[2], delta=str(current_seven_day_vs_past_seven_day[2]) + '%')
+        col4.metric(label="Personal", value=seven_day_averages[3], delta=str(current_seven_day_vs_past_seven_day[3]) + '%')
     
+    if date_range == 'Yesterday':
 
-with col2:
-    st.metric(label = 'Sleep', value = sleep_data[0])
-    st.metric(label = 'Awake', value = sleep_data[1])
-    st.write(f'##### Mood Yesterday: {mood_data[0]}')
-    #st.write(mood_data[1])
-with col3:
-    
-    nasa_image_of_the_day()
-    
-col1, col2 = st.columns([7,2])
+        col1, col2, col3, col4 = st.columns(4)
+        col1.metric(label="Overall", value=yesterdays_metrics[0], delta=str(yesterday_vs_day_before_yesterday_percent_change[0]) + '%')
+        col2.metric(label="Health", value=yesterdays_metrics[1], delta=str(yesterday_vs_day_before_yesterday_percent_change[1]) + '%')
+        col3.metric(label="Productivity", value=yesterdays_metrics[2], delta=str(yesterday_vs_day_before_yesterday_percent_change[2]) + '%')
+        col4.metric(label="Personal", value=yesterdays_metrics[3], delta=str(yesterday_vs_day_before_yesterday_percent_change[3]) + '%')
+        
+        if yesterdays_metrics[0] >= 100:
+            rain(emoji="🎯",font_size=54,falling_speed=5,animation_length="5")
+            st.success('Congratulations, yesterday you hit your goal score!', icon='🎯')
+            
+        if yesterdays_metrics[0] <100 and yesterdays_metrics[0] >95:
+            rain(emoji="⚠️",font_size=54,falling_speed=5,animation_length="5")
+            st.warning('So close! You nearly hit your target, try better today!', icon="⚠️")
+            
+        if yesterdays_metrics[0] <=95:
+            rain(emoji="🚨",font_size=54,falling_speed=5,animation_length="5")
+            st.error('Yesterday you were off track, try extra hard today!', icon='🚨')
 
-b = DataPipeline.AirTablePipeline()
-currently_reading_covers = b.get_currently_reading_books()
-number_of_books_reading = len(currently_reading_covers)
+with outer_cols[1]:
+
+    with st.expander('👹 **Manchester United**', expanded=True):
+
+        st.write(f'<center> {football_widget[3]} </center>' + '  \n' +  f'<center> {football_widget[4]}</center>', unsafe_allow_html=True)
+        st.write('')
+        col1,col2 = st.columns(2)
+        col1.image(football_widget[1], width=60)
+        col2.image(football_widget[2], width=60)
+
+    with st.expander('🎵 **Currently Playing**', expanded=True):
+
+        col1,col2 = st.columns(2)
+        with col1:
+            st.write('')
+            st.write(f'<center> {currently_playing[0]}: </center>' + '  \n' + f'<center> {currently_playing[1]}</center>', unsafe_allow_html=True)
+        with col2:
+            st.image(image=currently_playing[2], use_column_width=True)
+
+        st.write('☁️ **SoundCloud**')
+        options = ['Summer Temptations', 'Urban Volume', 'Sugar Baby', '90s Club Classics']
+        random.shuffle(options)
+       
+        selection = st.selectbox(label ='What is the soundtrack for today?', options=options, label_visibility='collapsed')
+
+        dj_mix_dict = {'Summer Temptations':'https://soundcloud.com/missmartindj/summer-temptations-minimix-1','Urban Volume':'https://soundcloud.com/missmartindj/urban-volume-i',
+        'Sugar Baby':'https://soundcloud.com/missmartindj/sugar-baby-volume-i','90s Club Classics':'https://soundcloud.com/missmartindj/9ts-baby-club-clasics'}
+
+        for mix in dj_mix_dict.keys():
+            if selection == mix:
+                url = dj_mix_dict[mix]
+
+        st_player(url=url, height=200, playing=False)
 
 
 
-
-
-
-with col1:
-    st.write('')
-    st.write('')
-    st.write('##### Goals for Today:')
-
-    for i in range(0,3):
-        st.text(f'{mood_data[1][1][i]}')
-    
-    st.write('')
-    st.write('')
-    st.write('##### Yesterday Recap:')
-
-    for i in range(0,3):
-        st.text(f'{mood_data[1][0][i]}')
 
 
     
     
 
-with col2:
-    selection = st.selectbox(label ='What is the soundtrack for today?', options=['Summer Temptations', 'Urban Volume', 'Sugar Baby', '90s Club Classics'])
-    
 
-    dj_mix_dict = {'Summer Temptations':'https://soundcloud.com/missmartindj/summer-temptations-minimix-1','Urban Volume':'https://soundcloud.com/missmartindj/urban-volume-i',
-    'Sugar Baby':'https://soundcloud.com/missmartindj/sugar-baby-volume-i','90s Club Classics':'https://soundcloud.com/missmartindj/9ts-baby-club-clasics'}
-
-    for mix in dj_mix_dict.keys():
-        if selection == mix:
-            url = dj_mix_dict[mix]
-    st_player(url=url, height=300, playing=False)
-
-
-st.write('tube status, ')
