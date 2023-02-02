@@ -9,7 +9,7 @@ from todoist_api_python.api import TodoistAPI
 class TodoistPipeline:
 
     def __init__(self):
-        api = TodoistAPI(st.secrets['TODOIST_AP_KEY'])
+        api = TodoistAPI(st.secrets['TODOIST_API_KEY'])
         self.tasks = api.get_tasks()
 
     def get_todays_tasks(self):
