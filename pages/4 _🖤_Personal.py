@@ -1,31 +1,33 @@
 
-import streamlit as st
-from streamlit_extras.app_logo import add_logo
-add_logo("logo_white_background.jpg", height=150)
-
-import plotly.express as px
-import pandas as pd
-
-df = pd.read_csv('Database.csv')
-
+import important_metrics as im
 import importlib
+import streamlit as st
+import streamlit_nested_layout
+import pandas as pd
+import plotly.express as px
 
-DataPipeline = importlib.import_module('Data-Pipeline')
-
-spotify = DataPipeline.SpotifyPipeline()
-
-
-number_of_entries = len(df)
+from streamlit_extras.app_logo import add_logo
 from streamlit_extras.metric_cards import style_metric_cards
-#style_metric_cards( border_left_color='#ff4bd0')
+from streamlit_pills import pills
+
+# styling
+
 
 style_metric_cards( border_left_color='#6F4E37', border_size_px =2, border_color='#ccbea3', border_radius_px=10)
-from streamlit_extras.stoggle import stoggle
-st.markdown("<h1 style='text-align: center;color: black;'>Personal Hub</h1>", unsafe_allow_html=True)
-st.write('')
-import streamlit_nested_layout
+add_logo("logo_white_background.jpg", height=150)
 
-import important_metrics as im
+
+#loading data and important metrics
+
+
+df = pd.read_csv('Database.csv')
+number_of_entries = len(df)
+
+DataPipeline = importlib.import_module('Data-Pipeline')
+spotify = DataPipeline.SpotifyPipeline()
+airtable=DataPipeline.AirTablePipeline()
+currently_reading = airtable.get_currently_reading_books()
+
 productivity_metrics = im.ImportantMetrics(metric_list = ['Personal', 'Dogs', 'Cleaning', 'Self-Care', 'Mood'])
 yesterdays_metrics = productivity_metrics.get_time_period_metric(1)
 yesterday_vs_day_before_yesterday_percent_change = productivity_metrics.get_time_period_percent_change(1)
@@ -33,10 +35,34 @@ three_day_averages = productivity_metrics.get_time_period_metric(3)
 current_three_day_vs_past_three_day = productivity_metrics.get_time_period_percent_change(3)
 seven_day_averages = productivity_metrics.get_time_period_metric(7)
 current_seven_day_vs_past_seven_day = productivity_metrics.get_time_period_percent_change(7)
+
+
+# functions needed
+
+
+emoji_list = ['🤩', '😆', '😃', '😀', '☺️', '🙂' ,'😐','😶', '😶' ]
+
+def get_mood_emoji(value):
+    index = 9 - value
+    emoji = emoji_list[index]
+    return emoji
+
+# start of visual
+
+
+st.markdown("<h1 style='text-align: center;color: black;'>Personal Hub</h1>", unsafe_allow_html=True)
+st.write('')
+
+
+# first row
+
+
 date_range = st.select_slider(label = 'What date range would you like to see?', options = ['Yesterday', '3 Days', '7 Days'], label_visibility = 'collapsed')
 
 outer_cols = st.columns([7,0.3,1])
+
 with outer_cols[0]:
+
     if date_range == '3 Days':
         col1, col2, col3, col4 = st.columns(4)
         col1.metric(label="Personal", value=three_day_averages[0], delta=str(current_three_day_vs_past_three_day[0]) + '%')
@@ -56,15 +82,6 @@ with outer_cols[0]:
         col3.metric(label="Cleaning", value=yesterdays_metrics[2], delta=str(yesterday_vs_day_before_yesterday_percent_change[2]) + '%')
         col4.metric(label="Self-Care", value=yesterdays_metrics[3], delta=str(yesterday_vs_day_before_yesterday_percent_change[3]) + '%')
 
-
-emoji_list = ['🤩', '😆', '😃', '😀', '☺️', '🙂' ,'😐','😶', '😶' ]
-
-def get_mood_emoji(value):
-    index = 9 - value
-    emoji = emoji_list[index]
-    return emoji
-
-
 with outer_cols[2]:
    
     if date_range == 'Yesterday':
@@ -77,19 +94,15 @@ with outer_cols[2]:
         emoji = get_mood_emoji(value)
         st.write('## Mood:' +  f'{emoji}')
 
-    
     if date_range == '7 Days':
         value = seven_day_averages[4]
         emoji = get_mood_emoji(value)
         st.write('## Mood:' +  f'{emoji}')
+
 st.write('')
 st.write('')
 
-import importlib 
-DataPipeline = importlib.import_module('Data-Pipeline')
-
-a=DataPipeline.AirTablePipeline()
-currently_reading = a.get_currently_reading_books()
+# second row
 
 outer_cols = st.columns([10,14])
 
@@ -115,6 +128,7 @@ with outer_cols[0]:
                 st.write(currently_reading[1][2] + '%')
 
 with outer_cols[1]:
+
     with st.expander(' **🎵 Top Songs** ', expanded=True):
         st.write('')
         top_songs = spotify.get_top_tracks()
@@ -130,9 +144,14 @@ with outer_cols[1]:
         col3.image(top_songs[2][2], width=100)
         col3.write(top_songs[2][0])
         
+       
+with st.expander(label = '**Full Spotify Stats**', expanded=False):
+    st.markdown(body = '<a href="https://www.data-card-for-spotify.com/card?user_id=djgabriellamartin"><img src="https://www.data-card-for-spotify.com/api/card?user_id=djgabriellamartin&hide_top_artists=1" alt="Data Card for Spotify"></a>', unsafe_allow_html=True)
 
 
-from streamlit_pills import pills
+# line graph of long term data
+
+
 selected = pills('What to visualise', ['Personal', 'Dogs', 'Cleaning', 'Self-Care', 'Mood'], ['❤️‍🩹', '🐾', '🧽','💌', '😏'], label_visibility='collapsed')
 
 if selected == 'Personal' or selected == 'Dogs' or selected == 'Cleaning' or selected == 'Self-Care':
