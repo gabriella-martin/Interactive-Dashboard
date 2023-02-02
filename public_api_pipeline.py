@@ -6,7 +6,7 @@ import streamlit as st
 from datetime import datetime
 from decouple import config 
 
-def get_manutd_next_game_data():
+'''def get_manutd_next_game_data():
     url = "https://api-football-v1.p.rapidapi.com/v3/fixtures"
     querystring = {"team":"33","next":"1"}
     headers = {"X-RapidAPI-Key": st.secrets['FOOTBALL_API_KEY'], "X-RapidAPI-Host": "api-football-v1.p.rapidapi.com"}
@@ -59,7 +59,7 @@ football_widget = football_api_process()
 
 
 with open('footie', 'wb') as fb:
-    pickle.dump(football_widget, fb)
+    pickle.dump(football_widget, fb)'''
 
 def get_weather():
   key = st.secrets['WEATHER_API_KEY']
