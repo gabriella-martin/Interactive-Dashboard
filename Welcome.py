@@ -117,15 +117,15 @@ with outer_cols[0]:
         col4.metric(label="Personal", value=yesterdays_metrics[3], delta=str(yesterday_vs_day_before_yesterday_percent_change[3]) + '%')
         
         if yesterdays_metrics[0] >= 100:
-            rain(emoji="🎯",font_size=54,falling_speed=5,animation_length="5")
+            
             st.success('Congratulations, yesterday you hit your goal score!', icon='🎯')
             
         if yesterdays_metrics[0] <100 and yesterdays_metrics[0] >95:
-            rain(emoji="⚠️",font_size=54,falling_speed=5,animation_length="5")
+            
             st.warning('So close! You nearly hit your target, try better today!', icon="⚠️")
             
         if yesterdays_metrics[0] <=95:
-            rain(emoji="🚨",font_size=54,falling_speed=5,animation_length="5")
+            
             st.error('Yesterday you were off track, try extra hard today!', icon='🚨')
 
 with outer_cols[1]:
