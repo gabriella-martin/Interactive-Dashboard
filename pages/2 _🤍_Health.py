@@ -12,9 +12,10 @@ from streamlit_pills import pills
 
 #styling
 
+color = '#6e6056'
 
-style_metric_cards( border_left_color='#6F4E37', border_size_px =2, border_color='#ccbea3', border_radius_px=10)
-add_logo("logo_white_background.jpg", height=160)
+style_metric_cards( background_color = color,border_left_color=color, border_size_px =0.3, border_color=color, border_radius_px=10)
+add_logo("logo_transparent_background.png", height=160)
 
 
 #loading data and important metrics
@@ -35,7 +36,7 @@ current_seven_day_vs_past_seven_day = productivity_metrics.get_time_period_perce
 # start of visual
 
 
-st.markdown("<h1 style='text-align: center;color: black;'>Health Hub</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center;color: #FDF4DC;'>Health Hub</h1>", unsafe_allow_html=True)
 
 st.write('')
 
@@ -105,8 +106,8 @@ with col1:
         labels = ['Protein', 'Carbs', 'Fat']
         values = [120, 60, 40]
 
-        fig = px.pie( title = 'Yesterday:',height = 290, values=values, labels=labels, width=250, names=labels, hole=0.7, color = labels, color_discrete_map={'Protein':'#6F4E37', 'Carbs': '#9c8268', 'Fat': '#ccbea3'})
-
+        fig = px.pie( title = 'Yesterday:',height = 290, values=values, labels=labels, width=250, names=labels, hole=0.7, color = labels, color_discrete_map={'Protein':'#6e6056', 'Carbs': '#a69a8f', 'Fat': '	#e5ddd3'})
+#FFBCC3
         st.plotly_chart(fig)
 
 with col2:
@@ -114,7 +115,7 @@ with col2:
         labels = ['Protein', 'Carbs', 'Fat']
         values = [50, 20, 30]
 
-        fig = px.pie(title = 'Goal:',height = 290, names = labels, values=values, labels=labels, width=250,  hole=0.7, color = labels, color_discrete_map={'Protein':'#6F4E37', 'Carbs': '#9c8268', 'Fat': '#ccbea3'})
+        fig = px.pie(title = 'Goal:',height = 290, names = labels, values=values, labels=labels, width=250,  hole=0.7, color = labels, color_discrete_map={'Protein':'#6e6056', 'Carbs': '#a69a8f', 'Fat': '#e5ddd3'})
 
         st.plotly_chart(fig)
 
@@ -140,12 +141,12 @@ selected = pills("What to visualise", ["Health", "Steps Score", "Active Cals Sco
 
 
 if selected == 'Health' or selected == 'Steps Score' or selected == 'Active Cals Score' or selected == 'Diet':
-    fig = px.line(df, x='Days', y =[selected, 'Goal Score'], color_discrete_sequence=[ "#6F4E37", "#9c8268"])
+    fig = px.line(df, x='Days', y =[selected, 'Goal Score'], color_discrete_sequence=["#6e6056", "#e5ddd3"])
     fig.update(layout_yaxis_range = [50,130])
     st.plotly_chart(fig, use_container_width=True)
 
 else:
-    fig = px.line(df, x='Days', y =selected, color_discrete_sequence= ["#6F4E37"])
+    fig = px.line(df, x='Days', y =selected, color_discrete_sequence= ["#6e6056"])
     st.plotly_chart(fig, use_container_width=True)  
 
 

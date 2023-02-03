@@ -12,9 +12,10 @@ from streamlit_pills import pills
 
 # styling
 
+color = '#6e6056'
 
-style_metric_cards( border_left_color='#6F4E37', border_size_px =2, border_color='#ccbea3', border_radius_px=10)
-add_logo("logo_white_background.jpg", height=150)
+style_metric_cards( background_color = color,border_left_color=color, border_size_px =0.3, border_color=color, border_radius_px=10)
+add_logo("logo_transparent_background.png", height=160)
 
 
 #loading data and important metrics
@@ -50,7 +51,7 @@ def get_mood_emoji(value):
 # start of visual
 
 
-st.markdown("<h1 style='text-align: center;color: black;'>Personal Hub</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center;color: #FDF4DC;'>Personal Hub</h1>", unsafe_allow_html=True)
 st.write('')
 
 
@@ -155,12 +156,12 @@ with st.expander(label = '**Full Spotify Stats**', expanded=False):
 selected = pills('What to visualise', ['Personal', 'Dogs', 'Cleaning', 'Self-Care', 'Mood'], ['❤️‍🩹', '🐾', '🧽','💌', '😏'], label_visibility='collapsed')
 
 if selected == 'Personal' or selected == 'Dogs' or selected == 'Cleaning' or selected == 'Self-Care':
-    fig = px.line(df, x='Days', y =[selected, 'Goal Score'], color_discrete_sequence=[ "#6F4E37", "#9c8268"])
+    fig = px.line(df, x='Days', y =[selected, 'Goal Score'], color_discrete_sequence=["#6e6056", "#e5ddd3"])
     fig.update(layout_yaxis_range = [50,130])
     st.plotly_chart(fig, use_container_width=True)
 
 else:
-    fig = px.line(df, x='Days', y =selected, color_discrete_sequence= ["#6F4E37"])
+    fig = px.line(df, x='Days', y =selected, color_discrete_sequence= ["#6e6056"])
     st.plotly_chart(fig, use_container_width=True)  
 
 

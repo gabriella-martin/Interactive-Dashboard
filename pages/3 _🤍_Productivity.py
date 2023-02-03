@@ -12,9 +12,10 @@ from streamlit_pills import pills
 
 # styling
 
+color = '#6e6056'
 
-style_metric_cards( border_left_color='#6F4E37', border_size_px =2, border_color='#ccbea3', border_radius_px=10)
-add_logo("logo_white_background.jpg", height=150)
+style_metric_cards( background_color = color,border_left_color=color, border_size_px =0.3, border_color=color, border_radius_px=10)
+add_logo("logo_transparent_background.png", height=160)
 
 
 # loading data and important metrics
@@ -55,7 +56,7 @@ yesterdays_streak = df.iloc[number_of_entries -1]['GitHub Streak']
 # start of visual
 
 
-st.markdown("<h1 style='text-align: center;color: black;'>Productivity Hub</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center;color: #FDF4DC;'>Productivity Hub</h1>", unsafe_allow_html=True)
 
 st.write('')
 
@@ -176,7 +177,7 @@ elif date_range == '3 Days':
 elif date_range == '7 Days':
     values = [percent_of_working_not_coding_seven, percent_of_seven_day_coding]
 
-work_hour_split = px.pie(title='Work Hours Split',height = 395, values=values, labels=labels, width=250,  hole=0.7, color = labels, color_discrete_map={labels[0]:'#6F4E37', labels[1]: '#9c8268'})
+work_hour_split = px.pie(title='Work Hours Split',height = 395, values=values, labels=labels, width=250,  hole=0.7, color = labels, color_discrete_map={labels[0]:'#e5ddd3', labels[1]: '#6e6056'})
 
 labels = ['Non Coding Work', 'Coding','Reading']
 
@@ -189,7 +190,7 @@ elif date_range == '3 Days':
 elif date_range == '7 Days':
     values = seven_day_full_split
 
-productive_hour_split = px.pie(height = 400,title='Productive Hours Split', values=values, labels=labels, width=250, hole=0.7, names=labels,color = labels, color_discrete_map={labels[0]:'#6F4E37', labels[1]: '#9c8268', labels[2]: '#5C4033'})
+productive_hour_split = px.pie(height = 400,title='Productive Hours Split', values=values, labels=labels, width=250, hole=0.7, names=labels,color = labels, color_discrete_map={labels[0]:'#e5ddd3', labels[1]: '#6e6056', labels[2]: '#a69a8f'})
 
 col1, col2 = st.columns(2)
 
@@ -207,12 +208,12 @@ with col2:
 selected = pills('What to visualise', ['Productivity', 'Work Score', 'Reading Score', 'Work Hours', 'Reading Hours', 'Coding Time', 'GitHub Contributions'], ['🏹', '👩🏽‍💻', '📖','👩🏽‍💻', '📖', '⌨️', '😺'], label_visibility='collapsed')
 
 if selected == 'Productivity' or selected == 'Work Score' or selected == 'Reading Score':
-    fig = px.line(df, x='Days', y =[selected, 'Goal Score'], color_discrete_sequence=[ "#6F4E37", "#9c8268"])
+    fig = px.line(df, x='Days', y =[selected, 'Goal Score'], color_discrete_sequence=["#6e6056", "#e5ddd3"])
     fig.update(layout_yaxis_range = [50,130])
     st.plotly_chart(fig, use_container_width=True)
 
 else:
-    fig = px.line(df, x='Days', y =selected, color_discrete_sequence= ["#6F4E37"])
+    fig = px.line(df, x='Days', y =selected, color_discrete_sequence= ["#6e6056"])
     st.plotly_chart(fig, use_container_width=True)  
 
 

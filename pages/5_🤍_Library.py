@@ -5,7 +5,7 @@ import streamlit as st
 from streamlit_extras.app_logo import add_logo
 
 
-add_logo("logo_white_background.jpg", height=150)
+add_logo("logo_transparent_background.png", height=160)
 
 DataPipeline = importlib.import_module('Data-Pipeline')
 airtable=DataPipeline.AirTablePipeline()
@@ -13,7 +13,7 @@ currently_reading = airtable.get_currently_reading_books()
 read_books = airtable.get_books_read_covers()
 
 
-st.markdown("<h1 style='text-align: center;color: black;'>Books Read</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center;color: #FDF4DC;'>Books Read</h1>", unsafe_allow_html=True)
 st.write('')
 st.write('')
 

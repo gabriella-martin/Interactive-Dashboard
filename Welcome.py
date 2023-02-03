@@ -18,8 +18,11 @@ from streamlit_extras.let_it_rain import rain
 from streamlit_extras.metric_cards import style_metric_cards
 from streamlit_player import st_player
 
-add_logo("logo_white_background.jpg", height=150)
-style_metric_cards( border_left_color='#6F4E37', border_size_px =2, border_color='#ccbea3', border_radius_px=10)
+color = '#6e6056'
+
+style_metric_cards( background_color = color,border_left_color=color, border_size_px =0.3, border_color=color, border_radius_px=10)
+add_logo("logo_transparent_background.png", height=160)
+
 
 metric_list = ['Overall', 'Health', 'Productivity', 'Personal']
 
@@ -73,7 +76,7 @@ condition = public_api_pipeline.get_condition_emoji()
 col1, col2 = st.columns([7,2])
 today = str(datetime.today())
 today = today[:10]
-col1.write(f"##### Today: :violet[*{today}*] | {temp_text} {condition} | ☀️{sunrise_text} |🌙{sunset_text} | 🚆 DLR: {dlr_status}")
+col1.write(f"##### Today: :orange*{today}*] | {temp_text} {condition} | ☀️{sunrise_text} |🌙{sunset_text} | 🚆 DLR: {dlr_status}")
 col1.write('')
 col1.write('')
 
