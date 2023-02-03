@@ -8,7 +8,9 @@ from streamlit_lottie import st_lottie
 
 add_logo("logo_transparent_background.png", height=160)
 
-
+st.write("""<style>@import url('https://fonts.googleapis.com/css2?family=Kanit');html, body, [class*="css"]  {  
+   font-family: 'Kanit';  
+}</style>""", unsafe_allow_html=True)
 
 url ='https://assets7.lottiefiles.com/private_files/lf30_y9czxcb9.json'
 

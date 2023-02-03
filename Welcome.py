@@ -9,14 +9,19 @@ import streamlit_nested_layout
 
 st.set_page_config(
     page_title="Gabriella's Dashboard",
-    page_icon="",
-    layout="wide")
+    page_icon="logo_transparent_background.png",
+    layout="wide",
+    initial_sidebar_state='auto')
     
 from datetime import datetime
 from streamlit_extras.app_logo import add_logo
 from streamlit_extras.let_it_rain import rain
 from streamlit_extras.metric_cards import style_metric_cards
 from streamlit_player import st_player
+
+st.write("""<style>@import url('https://fonts.googleapis.com/css2?family=Kanit');html, body, [class*="css"]  {  
+   font-family: 'Kanit';  
+}</style>""", unsafe_allow_html=True)
 
 color = '#6e6056'
 

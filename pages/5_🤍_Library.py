@@ -7,6 +7,10 @@ from streamlit_extras.app_logo import add_logo
 
 add_logo("logo_transparent_background.png", height=160)
 
+st.write("""<style>@import url('https://fonts.googleapis.com/css2?family=Kanit');html, body, [class*="css"]  {  
+   font-family: 'Kanit';  
+}</style>""", unsafe_allow_html=True)
+
 DataPipeline = importlib.import_module('Data-Pipeline')
 airtable=DataPipeline.AirTablePipeline()
 currently_reading = airtable.get_currently_reading_books()

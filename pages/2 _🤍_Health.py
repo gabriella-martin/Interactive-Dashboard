@@ -12,6 +12,10 @@ from streamlit_pills import pills
 
 #styling
 
+st.write("""<style>@import url('https://fonts.googleapis.com/css2?family=Kanit');html, body, [class*="css"]  {  
+   font-family: 'Kanit';  
+}</style>""", unsafe_allow_html=True)
+
 color = '#6e6056'
 
 style_metric_cards( background_color = color,border_left_color=color, border_size_px =0.3, border_color=color, border_radius_px=10)
