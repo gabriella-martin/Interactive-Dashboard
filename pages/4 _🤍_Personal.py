@@ -9,7 +9,7 @@ import plotly.express as px
 from streamlit_extras.app_logo import add_logo
 from streamlit_extras.metric_cards import style_metric_cards
 from streamlit_pills import pills
-
+DataPipeline = importlib.import_module('Data-Pipeline')
 
 
 # styling
@@ -20,20 +20,21 @@ st.write("""<style>@import url('https://fonts.googleapis.com/css2?family=Kanit')
 color = '#6e6056'
 
 style_metric_cards( background_color = color,border_left_color=color, border_size_px =0.3, border_color=color, border_radius_px=10)
-add_logo("logo_transparent_background.png", height=160)
+add_logo("logo_transparent_background.png", height=210)
 
 
 #loading data and important metrics
 
+@st.cache()
+def get_data():
+    df = pd.read_csv('Database.csv')
+    return df
 
-df = pd.read_csv('Database.csv')
-number_of_entries = len(df)
+df = get_data()
 
-DataPipeline = importlib.import_module('Data-Pipeline')
 spotify = DataPipeline.SpotifyPipeline()
 airtable=DataPipeline.AirTablePipeline()
 currently_reading = airtable.get_currently_reading_books()
-
 productivity_metrics = im.ImportantMetrics(metric_list = ['Personal', 'Dogs', 'Cleaning', 'Self-Care', 'Mood'])
 yesterdays_metrics = productivity_metrics.get_time_period_metric(1)
 yesterday_vs_day_before_yesterday_percent_change = productivity_metrics.get_time_period_percent_change(1)

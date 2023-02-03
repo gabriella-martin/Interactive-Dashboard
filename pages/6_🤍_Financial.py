@@ -6,7 +6,7 @@ import streamlit as st
 from streamlit_extras.app_logo import add_logo
 from streamlit_lottie import st_lottie
 
-add_logo("logo_transparent_background.png", height=160)
+add_logo("logo_transparent_background.png", height=210)
 
 st.write("""<style>@import url('https://fonts.googleapis.com/css2?family=Kanit');html, body, [class*="css"]  {  
    font-family: 'Kanit';  
