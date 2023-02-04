@@ -124,4 +124,5 @@ def nasa_image_of_the_day():
     url = 'https://api.nasa.gov/planetary/apod?api_key=PZcnX4xvaDZt6n394qdhjTT9p9Jvwex3oTqMofpt'
     response = requests.get(url)
     nasa_image = (response.json())['hdurl']
-    return nasa_image
+    title_of_image = (response.json()['title'])
+    return nasa_image, title_of_image

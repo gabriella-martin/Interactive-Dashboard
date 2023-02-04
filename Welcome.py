@@ -7,17 +7,18 @@ import random
 import streamlit as st
 import streamlit_nested_layout
 
-st.set_page_config(
-    page_title="Gabriella's Dashboard",
-    page_icon="logo_transparent_background.png",
-    layout="wide",
-    initial_sidebar_state='auto')
-    
 from datetime import datetime
 from streamlit_extras.app_logo import add_logo
 from streamlit_extras.let_it_rain import rain
 from streamlit_extras.metric_cards import style_metric_cards
 from streamlit_player import st_player
+
+st.set_page_config(
+    page_title="Gabriella's Dashboard",
+    page_icon="logo_transparent_background.png",
+    layout="wide",
+    initial_sidebar_state='auto')
+
 
 st.write("""<style>@import url('https://fonts.googleapis.com/css2?family=Kanit');html, body, [class*="css"]  {  
    font-family: 'Kanit';  
@@ -40,6 +41,10 @@ todays_tasks = a.get_todays_tasks()
 a=DataPipeline.SpotifyPipeline()
 currently_playing = a.get_currently_playing()
 nasa_image = public_api_pipeline.nasa_image_of_the_day()
+
+with st.sidebar:
+    st.image(nasa_image[0],  caption='NASA Image of the Day: ' + nasa_image[1], width=450, use_column_width=True)
+
 
 yesterdays_metrics = overall_metrics.get_time_period_metric(1)
 yesterday_vs_day_before_yesterday_percent_change = overall_metrics.get_time_period_percent_change(1)
@@ -78,26 +83,17 @@ sunset_text = (str(weather[1]) + 'pm')
 temp_text = str(weather[2]) +  '\N{DEGREE SIGN}' + 'C'
 condition = public_api_pipeline.get_condition_emoji()
 
-col1, col2 = st.columns([7,2])
+
 today = str(datetime.today())
 today = today[:10]
-col1.write(f"##### Today: :orange*{today}*] | {temp_text} {condition} | ☀️{sunrise_text} |🌙{sunset_text} | 🚆 DLR: {dlr_status}")
-col1.write('')
-col1.write('')
+st.write(f"##### Today: :orange*{today}*] | {temp_text} {condition} | ☀️{sunrise_text} |🌙{sunset_text} | 🚆 DLR: {dlr_status}")
+st.write('')
+st.write('')
 
 
 outer_cols = st.columns([13, 4])
 
 with outer_cols[0]:
-
-    col1,col2 = st.columns([7,3])
-    col1.image(nasa_image, caption='NASA Image of the Day', width=450, use_column_width=True)
-    with col2:
-        with st.expander("☑️ **Today's Tasks**", expanded=True):
-
-            for task in todays_tasks:
-                st.write(task)
-
     date_range = st.select_slider(label = 'What date range would you like to see?', options = ['Yesterday', '3 Days', '7 Days'], label_visibility = 'collapsed')
     
     if date_range == '3 Days':
@@ -124,7 +120,7 @@ with outer_cols[0]:
         col3.metric(label="Productivity", value=yesterdays_metrics[2], delta=str(yesterday_vs_day_before_yesterday_percent_change[2]) + '%')
         col4.metric(label="Personal", value=yesterdays_metrics[3], delta=str(yesterday_vs_day_before_yesterday_percent_change[3]) + '%')
         
-        if yesterdays_metrics[0] >= 100:
+'''     if yesterdays_metrics[0] >= 100:
             
             st.success('Congratulations, yesterday you hit your goal score!', icon='🎯')
             
@@ -135,7 +131,16 @@ with outer_cols[0]:
         if yesterdays_metrics[0] <=95:
             
             st.error('Yesterday you were off track, try extra hard today!', icon='🚨')
+''''''
+    col1,col2 = st.columns([7,3])
+    #col1.image(nasa_image[0],  caption='NASA Image of the Day: ' + nasa_image[1], width=450, use_column_width=True)
+    with col2:
+        with st.expander("☑️ **Today's Tasks**", expanded=True):
 
+            for task in todays_tasks:
+                st.write(task)'''
+
+    
 with outer_cols[1]:
 
     with st.expander('👹 **Manchester United**', expanded=True):

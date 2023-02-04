@@ -8,8 +8,7 @@ class ImportantMetrics:
     def __init__(self, metric_list):
         self.metric_list = metric_list
 
-        
-        time_period_percent_change = []
+
 
     def get_time_period_metric(self, date_range=int):
         time_period_averages = []
@@ -41,7 +40,7 @@ class ImportantMetrics:
         total_hours_coding=0
         for i in range(1,date_range+1):
             total_commits += df.iloc[number_of_entries -i]['GitHub Contributions']
-            total_hours_coding += df.iloc[number_of_entries -i]['Coding Time']
+            total_hours_coding += df.iloc[number_of_entries -i]['Coding Hours']
         commits_per_hour = round(total_commits/total_hours_coding, 2)
         return commits_per_hour
 
@@ -52,7 +51,7 @@ class ImportantMetrics:
 
         for i in range(1, date_range+1):
             average_time_working += df.iloc[number_of_entries - i]['Work Hours']
-            average_time_coding += df.iloc[number_of_entries - i]['Coding Time']
+            average_time_coding += df.iloc[number_of_entries - i]['Coding Hours']
             average_time_reading += df.iloc[number_of_entries - i]['Reading Hours']
         
         percent_of_working_spent_coding = round((float(average_time_coding) / float(average_time_working))*100)

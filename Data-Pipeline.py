@@ -47,7 +47,24 @@ class AirTablePipeline:
                 currently_reading_percentages.append(percent_complete)
                 
         return currently_reading_covers, currently_reading_percentages
+    def get_just_read_books(self):
+        token = st.secrets['AIRTABLE_TOKEN_API']
+        headers = {'Authorization': f"Bearer {token}"}
 
+        response = requests.get('https://api.airtable.com/v0/appgTS4jpfHcqPeXA/tblSXX2los7etnqI0', headers=headers)
+
+        response = response.json()
+        response = response['records']
+
+        just_read_covers = []
+        for item in response:
+
+            if str(item['fields']['Date Started']) == '2023-02-03':
+                book_cover = item['fields']['Cover']
+                just_read_covers.append(book_cover)
+                
+
+        return just_read_covers
     def get_books_read_covers(self):
         token = st.secrets['AIRTABLE_TOKEN_API']
         headers = {'Authorization': f"Bearer {token}"}
@@ -66,7 +83,8 @@ class AirTablePipeline:
                 
         return read_covers
 
-
+a = AirTablePipeline()
+a.get_just_read_books()
 class SpotifyPipeline:
 
     def __init__(self):
