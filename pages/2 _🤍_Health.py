@@ -25,10 +25,11 @@ add_logo("logo_transparent_background.png", height=210)
 #loading data and important metrics
 
 
+
 df = pd.read_csv('Database.csv')
 number_of_entries = len(df)
 
-productivity_metrics = im.ImportantMetrics(metric_list = ['Health', 'Steps Score', 'Active Cals Score', 'Diet', 'Goal Score', 'Weight', 'Body-Fat %'])
+productivity_metrics = im.ImportantMetrics(metric_list = [ 'Weight', 'Body-Fat %', 'VO2 Max', 'Net Calories', 'Steps', 'Active Cals', 'Total Cals', 'Exercise' , 'Cals Consumed', 'Protein', 'Carbs', 'Fat', 'Saturated Fat', 'Sugar'])
 yesterdays_metrics = productivity_metrics.get_time_period_metric(1)
 yesterday_vs_day_before_yesterday_percent_change = productivity_metrics.get_time_period_percent_change(1)
 three_day_averages = productivity_metrics.get_time_period_metric(3)
@@ -37,82 +38,140 @@ seven_day_averages = productivity_metrics.get_time_period_metric(7)
 current_seven_day_vs_past_seven_day = productivity_metrics.get_time_period_percent_change(7)
 
 
+# sidebar
+
+with st.sidebar:
+    st.markdown("<h4 style='text-align: center;color: #FDF4DC;'>Date Range Slider</t>", unsafe_allow_html=True)
+    date_range = st.select_slider(label = 'DATE RANGE SLIDER', options = ['Yesterday', '3 Day Average', '7 Day Average'], label_visibility = 'collapsed')
+
+
 # start of visual
 
 
 st.markdown("<h1 style='text-align: center;color: #FDF4DC;'>Health Hub</h1>", unsafe_allow_html=True)
-
+string = '💡 Scroll down to view the data details'
+st.write(f'{string}', unsafe_allow_html=True)
 st.write('')
+columns = st.columns(5)
+with columns[0]:
+    st.write('')
+    st.write('')
+    st.write('#### Overall :')
+    st.write('')
+    st.write('')
+    st.write('')
+    st.write('')
+    st.write('')
+    st.write('#### Activity : ')
+    st.write('')
+    st.write('')
+    st.write('')
+    st.write('')
+    st.write('')
+    st.write('#### Nutrition :')
 
 
-# first section 
+with columns[1]:
+    if date_range == '3 Day Average':
+            st.metric(label='Weight kg', value=three_day_averages[0], delta=str(current_three_day_vs_past_three_day[0]) + '%', delta_color='inverse')
+            st.metric(label='Steps', value = three_day_averages[4], delta=str(current_three_day_vs_past_three_day[4]) + '%')
+            st.metric(label='Cals Consumed', value=three_day_averages[8], delta=str(current_three_day_vs_past_three_day[8]) + '%', delta_color='inverse')
+    if date_range == '7 Day Average':
+            st.metric(label='Weight kg', value=seven_day_averages[0], delta=str(current_seven_day_vs_past_seven_day[0]) + '%', delta_color='inverse')
+            st.metric(label='Steps', value = seven_day_averages[4], delta=str(current_seven_day_vs_past_seven_day[4])+ '%')  
+            st.metric(label='Cals Consumed', value=seven_day_averages[8], delta=str(current_seven_day_vs_past_seven_day[8]) + '%', delta_color='inverse')
+    if date_range == 'Yesterday':
+            st.metric(label='Weight kg', value=yesterdays_metrics[0], delta=str(yesterday_vs_day_before_yesterday_percent_change[0]) + '%', delta_color='inverse')
+            st.metric(label='Steps', value=yesterdays_metrics[4], delta=str(yesterday_vs_day_before_yesterday_percent_change[4]) + '%')
+            st.metric(label='Cals Consumed', value=yesterdays_metrics[8], delta=str(yesterday_vs_day_before_yesterday_percent_change[8]) + '%', delta_color='inverse')
 
 
-date_range = st.select_slider(label = 'What date range would you like to see?', options = ['Yesterday', '3 Days', '7 Days'], label_visibility = 'collapsed')
-outer_cols = st.columns([6, 0.5, 1.3,1.3])
+with columns[2]:
+    if date_range == '3 Day Average':
+            
+            st.metric(label='Body-Fat %', value=three_day_averages[1], delta=str(current_three_day_vs_past_three_day[1]) + '%', delta_color='inverse')
+            st.metric(label='Active Cals', value=three_day_averages[5], delta=str(current_three_day_vs_past_three_day[5]) + '%')
+            st.metric(label='Protein g', value=three_day_averages[9])
+            
+    if date_range == '7 Day Average':
+            st.metric(label='Body-Fat %', value=seven_day_averages[1], delta=str(current_seven_day_vs_past_seven_day[1]) + '%', delta_color='inverse')
+            st.metric(label='Active Cals', value=seven_day_averages[5], delta=str(current_seven_day_vs_past_seven_day[5]) + '%')
+            st.metric(label = 'Protein g', value=seven_day_averages[9])
 
-with outer_cols[0]:
-    
-    col1, col2, col3, col4 = st.columns([1.5,1.5,1.5,1.5])
-    
-    if date_range == '3 Days':
-        
-        col1.metric(label="Health", value=three_day_averages[0], delta=str(current_three_day_vs_past_three_day[0]) + '%')
-        col2.metric(label="Steps", value=three_day_averages[1], delta=str(current_three_day_vs_past_three_day[1]) + '%')
-        col3.metric(label="Active Cals", value=three_day_averages[2], delta=str(current_three_day_vs_past_three_day[2]) + '%')
-        col4.metric(label="Diet", value=three_day_averages[3], delta=str(current_three_day_vs_past_three_day[3]) + '%')
-
-    if date_range == '7 Days':
-        
-        col1.metric(label="Health", value=seven_day_averages[0], delta=str(current_seven_day_vs_past_seven_day[0]) + '%')
-        col2.metric(label="Steps", value=seven_day_averages[1], delta=str(current_seven_day_vs_past_seven_day[1]) + '%')
-        col3.metric(label="Active Cals", value=seven_day_averages[2], delta=str(current_seven_day_vs_past_seven_day[2]) + '%')
-        col4.metric(label="Diet", value=seven_day_averages[3], delta=str(current_seven_day_vs_past_seven_day[3]) + '%')
 
     if date_range == 'Yesterday':
-        
-        col1.metric(label="Health", value=yesterdays_metrics[0], delta=str(yesterday_vs_day_before_yesterday_percent_change[0]) + '%')
-        col2.metric(label="Steps", value=yesterdays_metrics[1], delta=str(yesterday_vs_day_before_yesterday_percent_change[1]) + '%')
-        col3.metric(label="Active Cals", value=yesterdays_metrics[2], delta=str(yesterday_vs_day_before_yesterday_percent_change[2]) + '%')
-        col4.metric(label="Diet", value=yesterdays_metrics[3], delta=str(yesterday_vs_day_before_yesterday_percent_change[3]) + '%')
+            
+            st.metric(label='Body-Fat %', value=yesterdays_metrics[1], delta=str(yesterday_vs_day_before_yesterday_percent_change[1]) + '%', delta_color='inverse')
+            st.metric(label='Active Cals', value=yesterdays_metrics[5], delta=str(yesterday_vs_day_before_yesterday_percent_change[5]) + '%')
+            st.metric(label='Protein g',value = yesterdays_metrics[9])
 
-with outer_cols[2]:
 
-    if date_range == '3 Days':
-       
-        st.metric(label='Weight', value=three_day_averages[5], delta=str(current_three_day_vs_past_three_day[5]) + '%', delta_color='inverse')
-    if date_range == '7 Days':
-        
-        st.metric(label='Weight', value=seven_day_averages[5], delta=str(current_seven_day_vs_past_seven_day[5]) + '%', delta_color='inverse')
+
+with columns[3]:
+    if date_range == '3 Day Average':
+            
+            st.metric(label='V0₂ Max', value=three_day_averages[2], delta=str(current_three_day_vs_past_three_day[2]) + '%')
+            st.metric(label='Total Cals', value=three_day_averages[6], delta=str(current_three_day_vs_past_three_day[6]) + '%')
+            st.metric(label='Fat g', value = three_day_averages[11])
+            #st.metric(label='Saturated Fat g', value = three_day_averages[12])
+            
+    if date_range == '7 Day Average':
+            st.metric(label='V0₂ Max', value=seven_day_averages[2], delta=str(current_seven_day_vs_past_seven_day[2]) + '%')
+            st.metric(label='Total Cals', value=seven_day_averages[6], delta=str(current_seven_day_vs_past_seven_day[6]) + '%')
+            st.metric(label='Fat g', value = seven_day_averages[11])
+            #st.metric(label='Saturated Fat g', value=seven_day_averages[12])
     if date_range == 'Yesterday':
-        
-        st.metric(label='Weight', value=yesterdays_metrics[5], delta=str(yesterday_vs_day_before_yesterday_percent_change[5]) + '%', delta_color='inverse')
+            
+            st.metric(label='V0₂ Max', value=yesterdays_metrics[2], delta=str(yesterday_vs_day_before_yesterday_percent_change[2]) + '%')
+            st.metric(label='Total Cals', value=yesterdays_metrics[6], delta=str(yesterday_vs_day_before_yesterday_percent_change[6]) + '%')
+            st.metric(label='Fat g', value = yesterdays_metrics[11])
+            #st.metric(label='Saturated Fat g', value = yesterdays_metrics[12])
+with columns[4]:
+    if date_range == '3 Day Average':
+            
+            st.metric(label='Net Calories', value=three_day_averages[3], delta=str(current_three_day_vs_past_three_day[3]) + '%', delta_color='inverse')
+            st.metric(label='Exercise Mins', value=three_day_averages[7], delta=str(current_three_day_vs_past_three_day[7]) + '%')
 
-with outer_cols[3]:
+    if date_range == '7 Day Average':
+            
+            st.metric(label='Net Calories', value=seven_day_averages[3], delta=str(current_seven_day_vs_past_seven_day[3]) + '%', delta_color='inverse')
+            st.metric(label='Exercise Mins', value=seven_day_averages[7], delta=str(current_seven_day_vs_past_seven_day[7]) + '%')
 
-    if date_range == '3 Days':
-        
-        st.metric(label='Body-Fat%', value=three_day_averages[6], delta=str(current_three_day_vs_past_three_day[6]) + '%', delta_color='inverse')
-    if date_range == '7 Days':
-        
-        st.metric(label='Body-Fat%', value=seven_day_averages[6], delta=str(current_seven_day_vs_past_seven_day[6]) + '%', delta_color='inverse')
     if date_range == 'Yesterday':
+            st.metric(label='Net Calories', value=yesterdays_metrics[3], delta=str(yesterday_vs_day_before_yesterday_percent_change[3]) + '%', delta_color='inverse')
+            st.metric(label='Exercise Mins', value=yesterdays_metrics[7], delta = str(yesterday_vs_day_before_yesterday_percent_change[7])+ '%')
+
+
+    if date_range == '3 Day Average':
+        st.metric(label='Carbs g', value = three_day_averages[10])
+        #st.metric(label='Sugar g', value = three_day_averages[13])
         
-        st.metric(label='Body-Fat%', value=yesterdays_metrics[6], delta=str(yesterday_vs_day_before_yesterday_percent_change[6]) + '%', delta_color='inverse')
+        
+    if date_range == '7 Day Average':
+        st.metric(label='Carbs g', value = seven_day_averages[10])
+        #st.metric(label='Sugar g', value = seven_day_averages[13])
+        
+    if date_range == 'Yesterday':
+        st.metric(label='Carbs g', value = yesterdays_metrics[10])
+        #st.metric(label='Sugar g', value = yesterdays_metrics[13])
 
-
-# section with pie charts
-
-
+# line graph of long term data
+st.write('')
+st.write('')
 col1, col2, col3, col4 = st.columns([3,3, 2, 4])
 
 with col1:
-        labels = ['Protein', 'Carbs', 'Fat']
-        values = [120, 60, 40]
-
-        fig = px.pie( title = 'Yesterday:',height = 290, values=values, labels=labels, width=250, names=labels, hole=0.7, color = labels, color_discrete_map={'Protein':'#6e6056', 'Carbs': '#a69a8f', 'Fat': '	#e5ddd3'})
-#FFBCC3
-        st.plotly_chart(fig)
+    labels = ['Protein', 'Carbs', 'Fat']
+    if date_range == 'Yesterday':
+        values = [yesterdays_metrics[9], yesterdays_metrics[10], yesterdays_metrics[11]]
+        
+    if date_range == '3 Day Average':
+        values = [three_day_averages[9], three_day_averages[10], three_day_averages[11]]
+    
+    if date_range == '7 Day Average':
+        values = [seven_day_averages[9], seven_day_averages[10], seven_day_averages[11]]
+    fig = px.pie( title = 'Yesterday:',height = 290, values=values, labels=labels, width=250, names=labels, hole=0.7, color = labels, color_discrete_map={'Protein':'#6e6056', 'Carbs': '#a69a8f', 'Fat': '	#e5ddd3'})
+    st.plotly_chart(fig)
 
 with col2:
         
@@ -138,14 +197,12 @@ with col4:
         st.markdown('15% Body Fat' +'  \n' + 'High VO<sub>2</sub>  Max' , unsafe_allow_html=True)
 
 
-# line graph of long term data
-
-
-selected = pills("What to visualise", ["Health", "Steps Score", "Active Cals Score", "Diet", "Steps", 'Active Cals', 'Total Cals Burned', 'VO2 Max', 'Weight', 'Body-Fat %', 'Net Calories', 'Sleep'], ["💪🏾", "🚶🏽‍♀️", "🔋", "🥗", '🚶🏽‍♀️', '🔋', '⚡', '🫀', '⚖️','📉', '🥅', '💤' ], label_visibility='collapsed')
+selected = pills("What to visualise", [ "Diet", "Steps", 'Active Cals', 'Total Cals', 'VO2 Max', 'Weight', 'Body-Fat %', 'Net Calories'], 
+[ "🥗", '🚶🏽‍♀️', '🔋', '⚡', '🫀', '⚖️','📉', '🥅' ], label_visibility='collapsed')
 
 
 if selected == 'Health' or selected == 'Steps Score' or selected == 'Active Cals Score' or selected == 'Diet':
-    fig = px.line(df, x='Days', y =[selected, 'Goal Score'], color_discrete_sequence=["#6e6056", "#e5ddd3"])
+    fig = px.line(df, x='Days', y =[selected], color_discrete_sequence=["#6e6056", "#e5ddd3"])
     fig.update(layout_yaxis_range = [50,130])
     st.plotly_chart(fig, use_container_width=True)
 
@@ -158,6 +215,7 @@ else:
 
 
 with st.expander('**Behind The Scenes**', expanded=False):
+
         
     with st.expander('**Data Details**', expanded=False):
         st.write('')
@@ -168,3 +226,9 @@ with st.expander('**Behind The Scenes**', expanded=False):
     with st.expander('**Future Roadmap**', expanded=False):
         st.write('wger, strava, google maps')
     st.write('axis')
+
+st.write('put pie chart on slider, sort graph axis out, change metrics, score second place')
+
+# section with pie charts
+
+
