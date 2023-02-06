@@ -144,12 +144,12 @@ with outer_cols[1]:
     with st.expander(' **📘 Just Read** ', expanded=True):
     
         col1,col2,col3 =st.columns(3)
-        col1.write('4/5')
+        col1.write(just_read[1] + '/5')
         col1.image(just_read[0])
-        col2.write('5/5')
-        col2.image(just_read[1])
-        col3.write('3/5')
-        col3.image(just_read[2])
+        col2.write(just_read[3] + '/5')
+        col2.image(just_read[2])
+        col3.write(just_read[5] + '/5')
+        col3.image(just_read[4])
         
 
 with st.expander('🎹 Top Tracks', expanded=True):
