@@ -125,18 +125,16 @@ with outer_cols[0]:
             col1,col2,col3= st.columns(3)
 
             with col1:
-                st.write(currently_reading[1][0] + '%')
-                st.image(image=currently_reading[0][0], use_column_width='always')
-                
-
+                st.write('Progress: ' + currently_reading[1][0] + '%')
+                st.image(image=currently_reading[0][0])
 
             with col2 :
-                st.write(currently_reading[1][1] + '%')
-                st.image(image=currently_reading[0][1], use_column_width='always')
+                st.write('Progress: ' + currently_reading[1][1] + '%')
+                st.image(image=currently_reading[0][1])
                 
             with col3:
-                st.write(currently_reading[1][2] + '%')
-                st.image(image=currently_reading[0][2], use_column_width='always')
+                st.write('Progress: ' + currently_reading[1][2] + '%')
+                st.image(image=currently_reading[0][2])
                 
 
 with outer_cols[1]:
@@ -144,11 +142,11 @@ with outer_cols[1]:
     with st.expander(' **📘 Just Read** ', expanded=True):
     
         col1,col2,col3 =st.columns(3)
-        col1.write(just_read[1] + '/5')
+        col1.write('Rating: ' + just_read[1] + '/5')
         col1.image(just_read[0])
-        col2.write(just_read[3] + '/5')
+        col2.write('Rating: ' + just_read[3] + '/5')
         col2.image(just_read[2])
-        col3.write(just_read[5] + '/5')
+        col3.write('Rating: '+ just_read[5] + '/5')
         col3.image(just_read[4])
         
 
