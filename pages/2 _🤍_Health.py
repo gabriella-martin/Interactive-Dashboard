@@ -49,7 +49,7 @@ with st.sidebar:
 
 
 st.markdown("<h1 style='text-align: center;color: #FDF4DC;'>Health Hub</h1>", unsafe_allow_html=True)
-string = '💡 Scroll down to view the data details'
+string = '💡'
 st.write(f'{string}', unsafe_allow_html=True)
 st.write('')
 columns = st.columns(5)

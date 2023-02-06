@@ -17,7 +17,7 @@ currently_reading = airtable.get_currently_reading_books()
 read_books = airtable.get_books_read_covers()
 
 
-st.markdown("<h1 style='text-align: center;color: #FDF4DC;'>Books Read</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center;color: #FDF4DC;'>Read</h1>", unsafe_allow_html=True)
 st.write('')
 st.write('')
 
