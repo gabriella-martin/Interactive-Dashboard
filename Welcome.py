@@ -9,6 +9,7 @@ import streamlit_nested_layout
 
 from datetime import datetime
 from streamlit_extras.app_logo import add_logo
+from streamlit_card import card
 from streamlit_extras.let_it_rain import rain
 from streamlit_extras.metric_cards import style_metric_cards
 from streamlit_player import st_player
@@ -86,7 +87,7 @@ condition = public_api_pipeline.get_condition_emoji()
 
 today = str(datetime.today())
 today = today[:10]
-st.write(f"##### Today: :orange*{today}*] | {temp_text} {condition} | ☀️{sunrise_text} |🌙{sunset_text} | 🚆 DLR: {dlr_status}")
+st.write(f"##### Today: :orange*{today}* | {temp_text} {condition} | ☀️{sunrise_text} |🌙{sunset_text} | 🚆 DLR: {dlr_status}")
 st.write('')
 st.write('')
 
@@ -94,86 +95,62 @@ st.write('')
 outer_cols = st.columns([13, 4])
 
 with outer_cols[0]:
-    date_range = st.select_slider(label = 'What date range would you like to see?', options = ['Yesterday', '3 Days', '7 Days'], label_visibility = 'collapsed')
-    
-    if date_range == '3 Days':
-
-        col1, col2, col3, col4 = st.columns(4)
-        col1.metric(label="Overall", value=three_day_averages[0], delta=str(current_three_day_vs_past_three_day[0]) + '%')
-        col2.metric(label="Health", value=three_day_averages[1], delta=str(current_three_day_vs_past_three_day[1]) + '%')
-        col3.metric(label="Productivity", value=three_day_averages[2], delta=str(current_three_day_vs_past_three_day[2]) + '%')
-        col4.metric(label="Personal", value=three_day_averages[3], delta=str(current_three_day_vs_past_three_day[3]) + '%')
-    
-    if date_range == '7 Days':
-
-        col1, col2, col3, col4 = st.columns(4)
-        col1.metric(label="Overall", value=seven_day_averages[0], delta=str(current_seven_day_vs_past_seven_day[0]) + '%')
-        col2.metric(label="Health", value=seven_day_averages[1], delta=str(current_seven_day_vs_past_seven_day[1]) + '%')
-        col3.metric(label="Productivity", value=seven_day_averages[2], delta=str(current_seven_day_vs_past_seven_day[2]) + '%')
-        col4.metric(label="Personal", value=seven_day_averages[3], delta=str(current_seven_day_vs_past_seven_day[3]) + '%')
-    
-    if date_range == 'Yesterday':
-
-        col1, col2, col3, col4 = st.columns(4)
-        col1.metric(label="Overall", value=yesterdays_metrics[0], delta=str(yesterday_vs_day_before_yesterday_percent_change[0]) + '%')
-        col2.metric(label="Health", value=yesterdays_metrics[1], delta=str(yesterday_vs_day_before_yesterday_percent_change[1]) + '%')
-        col3.metric(label="Productivity", value=yesterdays_metrics[2], delta=str(yesterday_vs_day_before_yesterday_percent_change[2]) + '%')
-        col4.metric(label="Personal", value=yesterdays_metrics[3], delta=str(yesterday_vs_day_before_yesterday_percent_change[3]) + '%')
+    inner_cols = st.columns(2)
+    with inner_cols[0]:
         
-'''     if yesterdays_metrics[0] >= 100:
-            
-            st.success('Congratulations, yesterday you hit your goal score!', icon='🎯')
-            
-        if yesterdays_metrics[0] <100 and yesterdays_metrics[0] >95:
-            
-            st.warning('So close! You nearly hit your target, try better today!', icon="⚠️")
-            
-        if yesterdays_metrics[0] <=95:
-            
-            st.error('Yesterday you were off track, try extra hard today!', icon='🚨')
-''''''
-    col1,col2 = st.columns([7,3])
-    #col1.image(nasa_image[0],  caption='NASA Image of the Day: ' + nasa_image[1], width=450, use_column_width=True)
-    with col2:
-        with st.expander("☑️ **Today's Tasks**", expanded=True):
+        card(
+    title='HEALTH',
+    text="",
+    image="https://images.unsplash.com/photo-1528498033373-3c6c08e93d79?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=685&q=80",
+    url="https://gabriella-martin-interactive-dashboard-welcome-9hpibj.streamlit.app/Health", 
+)
 
-            for task in todays_tasks:
-                st.write(task)'''
+        card(
+    title='PERSONAL',
+    text="",
+    image="https://images.unsplash.com/photo-1556229167-7ed11195e641?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
+    url="https://gabriella-martin-interactive-dashboard-welcome-9hpibj.streamlit.app/Personal", 
+)
+    with inner_cols[1]:
 
-    
+        card(
+    title='PRODUCTIVITY',
+    text="",
+    image="https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1472&q=80",
+    url="https://gabriella-martin-interactive-dashboard-welcome-9hpibj.streamlit.app/Productivity", 
+)
+        card(
+    title='FINANCIAL',
+    text="",
+    image="https://images.unsplash.com/photo-1628873041000-857b83258b82?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80",
+    url="https://gabriella-martin-interactive-dashboard-welcome-9hpibj.streamlit.app/Financial", 
+)
+
+
 with outer_cols[1]:
+    st.write('')
+    st.write('')
+    st.write('')
+    st.write('')
+    with st.expander("☑️ **Today's Tasks**", expanded=False):
 
-    with st.expander('👹 **Manchester United**', expanded=True):
+        for task in todays_tasks:
+            st.write(task)
+
+    with st.expander('👹 **Manchester United**', expanded=False):
 
         st.write(f'<center> {football_widget[3]} </center>' + '  \n' +  f'<center> {football_widget[4]}</center>', unsafe_allow_html=True)
         st.write('')
-        col1,col2 = st.columns(2)
-        col1.image(football_widget[1], width=60)
-        col2.image(football_widget[2], width=60)
+        inner_cols = st.columns([0.2,1,1,0.2])
+        inner_cols[1].image(football_widget[1], width=60)
+        inner_cols[2].image(football_widget[2], width=60)
 
-    with st.expander('🎵 **Currently Playing**', expanded=True):
-
-        col1,col2 = st.columns(2)
-        with col1:
-            st.write('')
-            st.write(f'<center> {currently_playing[0]}: </center>' + '  \n' + f'<center> {currently_playing[1]}</center>', unsafe_allow_html=True)
-        with col2:
+    with st.expander('🎵 **Currently Playing**', expanded=False):
+        st.write(f'<center> {currently_playing[0]}: </center>' + '  \n' + f'<center> {currently_playing[1]}</center>', unsafe_allow_html=True)
+        inner_cols = st.columns([0.5,3, 0.5])
+        with inner_cols[1]:
             st.image(image=currently_playing[2], use_column_width=True)
 
-        st.write('☁️ **SoundCloud**')
-        options = ['Summer Temptations', 'Urban Volume', 'Sugar Baby', '90s Club Classics']
-        random.shuffle(options)
-       
-        selection = st.selectbox(label ='What is the soundtrack for today?', options=options, label_visibility='collapsed')
-
-        dj_mix_dict = {'Summer Temptations':'https://soundcloud.com/missmartindj/summer-temptations-minimix-1','Urban Volume':'https://soundcloud.com/missmartindj/urban-volume-i',
-        'Sugar Baby':'https://soundcloud.com/missmartindj/sugar-baby-volume-i','90s Club Classics':'https://soundcloud.com/missmartindj/9ts-baby-club-clasics'}
-
-        for mix in dj_mix_dict.keys():
-            if selection == mix:
-                url = dj_mix_dict[mix]
-
-        st_player(url=url, height=200, playing=False)
 
 
 
