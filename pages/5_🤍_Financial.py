@@ -21,8 +21,8 @@ def load_lottieurl(url: str):
         return None
     return r.json()
 
+
 lottie_json = load_lottieurl(url)
 st_lottie(lottie_json)
-
 with st.expander('**Brainstorming Ideas**', expanded=False):
     st.write('Using Monzo personal API')

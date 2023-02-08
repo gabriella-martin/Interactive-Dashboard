@@ -55,16 +55,21 @@ class AirTablePipeline:
 
         response = response.json()
         response = response['records']
-
+        num_of_books = len(response)
         just_read_covers = []
         for item in response:
-
-            if str(item['fields']['Date Started']) == '2023-02-03':
-                book_cover = item['fields']['Cover']
-                just_read_covers.append(book_cover)
-                
+            if int(item['fields']['% Complete']) == 100:
+                if item['fields']['Number'] == (num_of_books-3) or item['fields']['Number'] == (num_of_books-4) or item['fields']['Number'] == (num_of_books-5):
+                    cover = (item['fields']['Cover'])
+                    rating = item['fields']['Rating /5']
+                    just_read_covers.append(cover)
+                    just_read_covers.append(rating)
 
         return just_read_covers
+
+                
+
+
     def get_books_read_covers(self):
         token = st.secrets['AIRTABLE_TOKEN_API']
         headers = {'Authorization': f"Bearer {token}"}
@@ -83,8 +88,7 @@ class AirTablePipeline:
                 
         return read_covers
 
-a = AirTablePipeline()
-a.get_just_read_books()
+
 class SpotifyPipeline:
 
     def __init__(self):
@@ -107,10 +111,10 @@ class SpotifyPipeline:
         
         headers = {'Content-Type': 'application/json',"Authorization": f"Bearer {access_token}"}
 
-        response = requests.get('https://api.spotify.com/v1/me/top/tracks?limit=3&time_range=short_term', headers=headers)
+        response = requests.get('https://api.spotify.com/v1/me/top/tracks?limit=6&time_range=short_term', headers=headers)
         
         items = ((response.json())['items'])
-        top_songs = [[], [], []]
+        top_songs = [[], [], [], [], [], []]
         for index, item in enumerate(items):
             top_songs[index].append(item['name'])
             top_songs[index].append(item['artists'][0]['name'])

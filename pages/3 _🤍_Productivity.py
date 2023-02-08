@@ -4,6 +4,7 @@ import pandas as pd
 import plotly.express as px
 import streamlit as st
 import streamlit_nested_layout
+import Visuals
 
 from streamlit_extras.app_logo import add_logo
 from streamlit_extras.metric_cards import style_metric_cards
@@ -64,8 +65,8 @@ with st.sidebar:
 
 
 st.markdown("<h1 style='text-align: center;color: #FDF4DC;'>Productivity Hub</h1>", unsafe_allow_html=True)
+st.markdown(f"<a  href='#linkto_data' style='color: #FDF4DC;'>💡Click here for data details</a>", unsafe_allow_html=True)
 
-st.write('')
 
 st.write('')
 
@@ -181,12 +182,12 @@ elif date_range == '3 Day Average':
 elif date_range == '7 Day Average':
     values = seven_day_full_split
 
-productive_hour_split = px.pie(height = 400,title='Productive Hours Split', values=values, labels=labels, width=250, hole=0.7, names=labels,color = labels, color_discrete_map={labels[0]:'#e5ddd3', labels[1]: '#6e6056', labels[2]: '#a69a8f'})
+productive_hour_split = px.pie(height = 365,title='Productive Hours Split', values=values, labels=labels, width=250, hole=0.7, names=labels,color = labels, color_discrete_map={labels[0]:'#e5ddd3', labels[1]: '#6e6056', labels[2]: '#a69a8f'})
 
 col1, col2 = st.columns(2)
 
 with col1:
-    st.write('')
+    
     chart_1 = st.plotly_chart(work_hour_split, use_container_width=True)
 
 with col2:
@@ -210,10 +211,36 @@ else:
 
 
 # behind the scenes
-
+st.markdown(f"<div id='linkto_data'></div>", unsafe_allow_html=True)
+data = st.write('')
  
-with st.expander('**Behind The Scenes**', expanded=False):
-    st.write('Work In Progress')
+with st.expander(label='Behind the Scenes', expanded=True):
+    st.write('')
+    with st.expander(label='Data Pipeline'):
+
+        st.write('**The full code for my productivity pipeline can be viewed [here]( https://github.com/gabriella-martin/Interactive-Dashboard/blob/main/Pipelines/Productivity-Data-Pipeline.py)**')
+        st.write('### • Retrieving Working & Reading Hours')
+
+        cols = st.columns([0.2,6,0.2])
+        cols[1].write("For tracking my working and reading time I use [Tracking Time](https://trackingtime.co/), other viable options with API’s include [RescueTime](https://www.rescuetime.co.uk/) or [Toggl](https://toggl.co.uk/), but I prefer the interface of Tracking Time. Daily my Python script connects to their [API]( https://api.trackingtime.co/doc/index.html) and with a bit of processing, I can retrieve the time spent that day on reading and working respectively. This data is then added to my CSV and visualised here with Pandas", unsafe_allow_html=True)
+
+
+
+        st.write('### • Retrieving Coding Hours')
+        cols = st.columns([0.2,6,0.2])
+        cols[1].write("For a clearer picture on my productivity I installed [WakaTime]( https://wakatime.co.uk/) into my IDE to get the hours spent actually coding (which is a subset of my time spent working). Daily my Python script speaks to their [API]( https://wakatime.co.uk/developers) and adds this data to my CSV database for visualisation here with Pandas")
+
+        st.write('### • Retrieving GitHub Contributions')
+        cols = st.columns([0.2,6,0.2])
+        cols[1].write("GitHub do have their own [API]( https://docs.github.co.uk/en/graphql) capable of retrieving this data but as I only care about commits at this moment, the [Exist]( https://exist.io/) – GitHub integration suffices. As above, my Python script connects to their [API]( https://developer.exist.io/) daily retrieves this data and adds to my CSV database for visualisation here with Pandas")
+        st.write('')
+        st.write('')
+
+    with st.expander(label='Visualisation'):
+        Visuals.productivity_visual()
+    
+    with st.expander(label='Future Roadmap'):
+        st.write('screen time')
 
 
 

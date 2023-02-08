@@ -6,6 +6,7 @@ import public_api_pipeline
 import random
 import streamlit as st
 import streamlit_nested_layout
+import Visuals
 
 from datetime import datetime
 from streamlit_extras.app_logo import add_logo
@@ -145,14 +146,46 @@ with outer_cols[1]:
         inner_cols[1].image(football_widget[1], width=60)
         inner_cols[2].image(football_widget[2], width=60)
 
-    with st.expander('🎵 **Currently Playing**', expanded=False):
+    with st.expander('📻 **Currently Playing**', expanded=False):
         st.write(f'<center> {currently_playing[0]}: </center>' + '  \n' + f'<center> {currently_playing[1]}</center>', unsafe_allow_html=True)
         inner_cols = st.columns([0.5,3, 0.5])
         with inner_cols[1]:
             st.image(image=currently_playing[2], use_column_width=True)
 
 
+with st.expander(label='Behind the Scenes', expanded=True):
+    st.write('')
+    with st.expander(label='Data Pipeline'):
 
+        st.write('**The full code for my welcome page pipeline can be viewed [here]( https://github.com/gabriella-martin/Interactive-Dashboard/blob/main/Welcome.py)**')
+        st.write("### • Retrieving Weather")
+
+        cols = st.columns([0.2,6,0.2])
+        cols[1].write("There are many options for a free weather API but I use [WeatherAPI.com]( https://www.weatherapi.com/). I retrieve the current temperature, current condition (which I format into an emoji), sunrise and sunset. This is called when the page loads to give up to date information")
+
+
+
+        st.write('### • Retrieving Tube Status')
+        cols = st.columns([0.2,6,0.2])
+        cols[1].write("Transport for London have a wide variety of API endpoints, for my purposes as I tend to just use the DLR on a daily basis, I use their [API]( https://api.tfl.gov.uk/) to retrieve the current tube status. This is extracted whenever the page is loaded and formatted with a corresponding emoji")
+
+        st.write('### • Retrieving Manchester United Data')
+        cols = st.columns([0.2,6,0.2])
+        cols[1].write("I hate to miss any of my team Manchester United’s games, so I use a football [API]( https://rapidapi.com/api-sports/api/api-football) to retrieve the important information about the next game; date, time, home or away, opponent and league. Again this is pulled once the page is loaded")
+        st.write("### • Retrieving Spotify Data")
+        cols = st.columns([0.2,6,0.2])
+        cols[1].write("Spotify’s easy to use [API]( https://developer.spotify.com/documentation/web-api/) nicely integrates with the welcome page by delivering what I am currently listening to, if I am not listening to anything right now, instead it pulls my most recently listened to track")
+        st.write("### • Retrieving Work ToDo List")
+        cols = st.columns([0.2,6,0.2])
+        cols[1].write("For my work tasks, I use ToDoist to pull my work-related tasks for the day, rather than process percentage of tasks complete as in the personal section, instead it retrieves the content of each task, giving me a clear overview of what work related tasks I have to do. Their [API]( https://developer.todoist.com/guides/#developing-with-todoist) is called each time the page loads to get a updated list of tasks")
+        st.write('')
+        st.write('')
+
+    with st.expander(label='Visualisation'):
+        Visuals.welcome_visual()
+    
+    with st.expander(label='Future Roadmap'):
+        st.write('')
 
 
 

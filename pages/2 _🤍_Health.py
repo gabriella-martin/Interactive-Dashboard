@@ -24,12 +24,10 @@ add_logo("logo_transparent_background.png", height=210)
 
 #loading data and important metrics
 
-
-
 df = pd.read_csv('Database.csv')
 number_of_entries = len(df)
 
-productivity_metrics = im.ImportantMetrics(metric_list = [ 'Weight', 'Body-Fat %', 'VO2 Max', 'Net Calories', 'Steps', 'Active Cals', 'Total Cals', 'Exercise' , 'Cals Consumed', 'Protein', 'Carbs', 'Fat', 'Saturated Fat', 'Sugar'])
+productivity_metrics = im.ImportantMetrics(metric_list = [ 'Weight', 'Body-Fat %', 'VO2 Max', 'Net Calories', 'Steps', 'Active Cals', 'Total Cals', 'Exercise' , 'Cals Consumed', 'Protein', 'Carbs', 'Fat', 'Saturated Fat', 'Sugar', 'Sleep'])
 yesterdays_metrics = productivity_metrics.get_time_period_metric(1)
 yesterday_vs_day_before_yesterday_percent_change = productivity_metrics.get_time_period_percent_change(1)
 three_day_averages = productivity_metrics.get_time_period_metric(3)
@@ -47,10 +45,11 @@ with st.sidebar:
 
 # start of visual
 
-
 st.markdown("<h1 style='text-align: center;color: #FDF4DC;'>Health Hub</h1>", unsafe_allow_html=True)
-string = '💡'
-st.write(f'{string}', unsafe_allow_html=True)
+
+
+st.markdown(f"<a  href='#linkto_data' style='color: #FDF4DC;'>💡Click here for data details</a>", unsafe_allow_html=True)
+
 st.write('')
 columns = st.columns(5)
 with columns[0]:
@@ -184,11 +183,13 @@ with col2:
 
 with col4:
     st.write('')
+    if date_range == '3 Day Average':
+        st.write(f'## Sleep: {three_day_averages[14]}hrs')
+    if date_range == '7 Day Average':
+        st.write(f'## Sleep: {seven_day_averages[14]}hrs')
+    if date_range == 'Yesterday':
+        st.write(f'## Sleep: {yesterdays_metrics[14]}hrs')
     st.write('')
-    st.write('')
-    st.write('')
-    st.write('')
-    
     with st.expander('**Daily Goals**', expanded=False):
         
         st.write('10,000 Steps' +'  \n' + '550 Active Cals' +'  \n' + '5 Diet Score' +'  \n' + 'Deficit: Cutting Phase')
@@ -197,8 +198,8 @@ with col4:
         st.markdown('15% Body Fat' +'  \n' + 'High VO<sub>2</sub>  Max' , unsafe_allow_html=True)
 
 
-selected = pills("What to visualise", [ "Diet", "Steps", 'Active Cals', 'Total Cals', 'VO2 Max', 'Weight', 'Body-Fat %', 'Net Calories'], 
-[ "🥗", '🚶🏽‍♀️', '🔋', '⚡', '🫀', '⚖️','📉', '🥅' ], label_visibility='collapsed')
+selected = pills("What to visualise", [ "Diet", "Steps", 'Active Cals', 'Total Cals', 'VO2 Max', 'Weight', 'Body-Fat %', 'Net Calories', 'Sleep'], 
+[ "🥗", '🚶🏽‍♀️', '🔋', '⚡', '🫀', '⚖️','📉', '🥅','💤' ], label_visibility='collapsed')
 
 
 if selected == 'Health' or selected == 'Steps Score' or selected == 'Active Cals Score' or selected == 'Diet':
@@ -210,24 +211,46 @@ else:
     fig = px.line(df, x='Days', y =selected, color_discrete_sequence= ["#6e6056"])
     st.plotly_chart(fig, use_container_width=True)  
 
-
+st.markdown(f"<div id='linkto_data'></div>", unsafe_allow_html=True)
+data = st.write('')
 # behind the scenes
+with st.expander(label='Behind the Scenes', expanded=True):
+    st.write('')
+    with st.expander(label='Data Pipeline'):
 
+        st.write('**The full code for my health pipeline can be viewed [here]( https://github.com/gabriella-martin/Interactive-Dashboard/blob/main/Pipelines/Health-Data-Pipeline.py)**')
+        st.write('### • Retrieving Steps, Active Calories, Total Calories Burned, Exercise, VO₂ Max & Diet')
+        st.write('')
+        cols = st.columns([0.2,6,0.2])
+        cols[1].write("My apple watch tracks my movement and VO2 max but currently there is no easy direct access to automatically retrieve this data, so I figured a work-around. Starting with [this app](https://www.healthexportapp.com/) and an iOS Shortcut that runs once daily at night that aggregates and retrieves important data points and saves it to a CSV in my iCloud Drive I use [MyFitnessPal](https://www.myfitnesspal.com/) to track my diet. Although they have their own [API](https://myfitnesspalapi.com/), they are selective of who they give out API keys to, I have applied but have yet to receive a response. Nevertheless, Apple Health can connect to it for some basic metrics which is sufficient for my needs. I chose the most important diet metrics to me and included these in the daily data extraction")
+        st.write('')
+        st.write('')
+        with cols[1]:
+            inner_cols = st.columns(2)
+            inner_cols[0].image(image = 'images/automatingshortcut.png')
+            inner_cols[1].write('')
+            inner_cols[1].image(image = 'images/shortcut.png')
 
-with st.expander('**Behind The Scenes**', expanded=False):
-
-        
-    with st.expander('**Data Details**', expanded=False):
+        cols = st.columns([0.2,6,0.2])
+        cols[1].write('Next step is to gain access to this file in my Python script, for this I use [PyiCloud]( https://github.com/picklepete/pyicloud). Once the file is accessible, I use python to extract and process the data. This data alongside the other health metrics is then added to my database CSV file ready to be visualised here with Pandas')
         st.write('')
 
-    with st.expander('**Data Pipeline**', expanded=False):
+        st.write('### • Retrieving Sleep')
+        cols = st.columns([0.2,6,0.2])
+        cols[1].write('Although in theory the above process should work for sleep data, I found it buggy - 50% of the time the sleep data was empty. However, what I use for my [mood-tracker]( https://exist.io/) has integrations with Apple Health, so getting sleep from their [API]( https://developer.exist.io/) was much more successful. I run my python script each night, I use their REST API to get my sleep time, which goes directly to my CSV ready for visualisation here with Pandas')
+
+        st.write('### • Retrieving Body Metrics')
+        cols = st.columns([0.2,6,0.2])
+        cols[1].write('For retrieval of my body measurements, I use a [Withings Smart-Scale]( https://www.withings.com/uk/en/scales), coupled with their [API]( https://developer.withings.co.uk/). I do a daily weigh-in which my Python script calls daily. The data is then added to my CSV database for visualisation with Pandas')
+        st.write('')
+        st.write('')
+
+    with st.expander(label='Visualisation'):
         Visuals.health_visual()
-
-    with st.expander('**Future Roadmap**', expanded=False):
+    
+    with st.expander(label='Future Roadmap'):
         st.write('wger, strava, google maps')
-    st.write('axis')
 
-st.write('put pie chart on slider, sort graph axis out, change metrics, score second place')
 
 # section with pie charts
 
