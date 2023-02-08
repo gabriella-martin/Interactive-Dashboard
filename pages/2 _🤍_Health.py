@@ -227,9 +227,9 @@ with st.expander(label='Behind the Scenes', expanded=True):
         st.write('')
         with cols[1]:
             inner_cols = st.columns(2)
-            inner_cols[0].image(image = 'automatingshortcut.png')
+            inner_cols[0].image(image = 'automatingshortcut.PNG')
             inner_cols[1].write('')
-            inner_cols[1].image(image = 'shortcut.png')
+            inner_cols[1].image(image = 'shortcut.PNG')
 
         cols = st.columns([0.2,6,0.2])
         cols[1].write('Next step is to gain access to this file in my Python script, for this I use [PyiCloud]( https://github.com/picklepete/pyicloud). Once the file is accessible, I use python to extract and process the data. This data alongside the other health metrics is then added to my database CSV file ready to be visualised here with Pandas')
