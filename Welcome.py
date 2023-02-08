@@ -89,6 +89,8 @@ condition = public_api_pipeline.get_condition_emoji()
 today = str(datetime.today())
 today = today[:10]
 st.write(f"##### Today: :orange*{today}* | {temp_text} {condition} | ☀️{sunrise_text} |🌙{sunset_text} | 🚆 DLR: {dlr_status}")
+st.markdown(f"<a  href='#linkto_data' style='color: #FDF4DC;'>💡Click here for data details</a>", unsafe_allow_html=True)
+
 st.write('')
 st.write('')
 
@@ -151,7 +153,8 @@ with outer_cols[1]:
         inner_cols = st.columns([0.5,3, 0.5])
         with inner_cols[1]:
             st.image(image=currently_playing[2], use_column_width=True)
-
+st.markdown(f"<div id='linkto_data'></div>", unsafe_allow_html=True)
+data = st.write('')
 
 with st.expander(label='Behind the Scenes', expanded=True):
     st.write('')
