@@ -91,8 +91,6 @@ today = today[:10]
 st.write(f"##### Today: :orange*{today}* | {temp_text} {condition} | ☀️{sunrise_text} |🌙{sunset_text} | 🚆 DLR: {dlr_status}")
 st.markdown(f"<a  href='#linkto_data' style='color: #FDF4DC;'>💡Click here for data details</a>", unsafe_allow_html=True)
 
-st.write('')
-st.write('')
 
 
 outer_cols = st.columns([13, 4])
