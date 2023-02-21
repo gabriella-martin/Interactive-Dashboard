@@ -1,19 +1,18 @@
 
-import important_metrics as im
-import importlib 
+import Important_Metrics as im
 import pickle
-import public_api_pipeline
-import random
 import streamlit as st
 import streamlit_nested_layout
 import Visuals
 
+
 from datetime import datetime
+from RealTime_Pipelines import Public_API_Pipelines, Homepage_Pipeline
 from streamlit_extras.app_logo import add_logo
 from streamlit_card import card
 from streamlit_extras.let_it_rain import rain
 from streamlit_extras.metric_cards import style_metric_cards
-from streamlit_player import st_player
+
 
 st.set_page_config(
     page_title="Gabriella's Dashboard",
@@ -36,13 +35,12 @@ metric_list = ['Overall', 'Health', 'Productivity', 'Personal']
 
 overall_metrics = im.ImportantMetrics(metric_list=metric_list)
 
-DataPipeline = importlib.import_module('Data-Pipeline')
 
-a=DataPipeline.TodoistPipeline()
+a=Homepage_Pipeline.TodoistPipeline()
 todays_tasks = a.get_todays_tasks()
-a=DataPipeline.SpotifyPipeline()
+a=Homepage_Pipeline.SpotifyPipeline()
 currently_playing = a.get_currently_playing()
-nasa_image = public_api_pipeline.nasa_image_of_the_day()
+nasa_image = Public_API_Pipelines.nasa_image_of_the_day()
 
 with st.sidebar:
     st.image(nasa_image[0],  caption='NASA Image of the Day: ' + nasa_image[1], width=450, use_column_width=True)
@@ -58,8 +56,8 @@ current_seven_day_vs_past_seven_day = overall_metrics.get_time_period_percent_ch
 with open('footie', 'rb') as fb:
     football_widget = pickle.load(fb)
 
-weather  = public_api_pipeline.get_weather()
-dlr_status = public_api_pipeline.tube_status_emoji()
+weather  = Public_API_Pipelines.get_weather()
+dlr_status = Public_API_Pipelines.tube_status_emoji()
 
 today = str(datetime.now())
 hour = today[10:13]
@@ -83,7 +81,7 @@ st.write('')
 sunrise_text = (str(weather[0]) + 'am')
 sunset_text = (str(weather[1]) + 'pm')
 temp_text = str(weather[2]) +  '\N{DEGREE SIGN}' + 'C'
-condition = public_api_pipeline.get_condition_emoji()
+condition = Public_API_Pipelines.get_condition_emoji()
 
 
 today = str(datetime.today())
