@@ -6,7 +6,7 @@ import streamlit as st
 from datetime import datetime
 from decouple import config 
 
-'''def get_manutd_next_game_data():
+def get_manutd_next_game_data():
     url = "https://api-football-v1.p.rapidapi.com/v3/fixtures"
     querystring = {"team":"33","next":"1"}
     headers = {"X-RapidAPI-Key": st.secrets['FOOTBALL_API_KEY'], "X-RapidAPI-Host": "api-football-v1.p.rapidapi.com"}
@@ -59,7 +59,7 @@ football_widget = football_api_process()
 
 
 with open('footie', 'wb') as fb:
-    pickle.dump(football_widget, fb)'''
+    pickle.dump(football_widget, fb)
 
 def get_weather():
   key = st.secrets['WEATHER_API_KEY']
@@ -97,8 +97,8 @@ def get_condition_emoji():
 
 
 def get_tube_status():
-    app_key = st.secrets['TFL_KEY']
-    url = f"https://api.tfl.gov.uk/Line/dlr/Status?detail=true&?app_key={app_key}"
+    api_key = st.secrets['TFL_KEY']
+    url = f"https://api.tfl.gov.uk/Line/dlr/Status?detail=true&?app_key={api_key}"
 
     response = requests.get(url)
     response = response.json()
@@ -121,7 +121,8 @@ def tube_status_emoji():
 
 
 def nasa_image_of_the_day():
-    url = 'https://api.nasa.gov/planetary/apod?api_key=PZcnX4xvaDZt6n394qdhjTT9p9Jvwex3oTqMofpt'
+    api_key = st.secrets('NASA_KEY')
+    url = f'https://api.nasa.gov/planetary/apod?api_key={api_key}'
     response = requests.get(url)
     nasa_image = (response.json())['hdurl']
     title_of_image = (response.json()['title'])
