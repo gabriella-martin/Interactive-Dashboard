@@ -21,7 +21,7 @@ st.write("""<style>@import url('https://fonts.googleapis.com/css2?family=Kanit')
 color = '#6e6056'
 
 style_metric_cards( background_color = color,border_left_color=color, border_size_px =0.3, border_color=color, border_radius_px=10)
-add_logo("logo_transparent_background.png", height=210)
+add_logo("images/logo_transparent_background.png", height=210)
 
 
 #loading data and important metricsget_just_read_books

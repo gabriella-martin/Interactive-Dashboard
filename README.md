@@ -201,5 +201,5 @@ football_widget = football_api_process()
 ```
 **Data Pipeline Visualisation**
 
-![alt text](welcomeimage.png)
+![alt text](images/welcomeimage.png)
 
