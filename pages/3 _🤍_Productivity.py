@@ -237,8 +237,7 @@ with st.expander(label='Data Details: Behind the Scenes', expanded=True):
     with st.expander(label='Visualisation'):
         visuals.productivity_visual()
     
-    with st.expander(label='Future Roadmap'):
-        st.write('screen time')
+
 
 
 

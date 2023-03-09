@@ -203,7 +203,7 @@ with st.expander(label='Data Details: Behind the Scenes', expanded=True):
         visuals.health_visual()
     
     with st.expander(label='Future Roadmap'):
-        st.write('wger, strava, google maps')
-
+        st.write('**WGER Workout Tracker**: To track workouts in the future, the [WGER API](https://wger.de/en/software/api) is a possible solution')
+        st.write('**Strava**: To track my running and cycling I use strava, who also have an api I would like to use here [API](https://developers.strava.com/)')
 
 

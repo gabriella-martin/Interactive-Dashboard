@@ -25,4 +25,4 @@ def load_lottieurl(url: str):
 lottie_json = load_lottieurl(url)
 st_lottie(lottie_json)
 with st.expander('**Brainstorming Ideas**', expanded=False):
-    st.write('Using Monzo personal API')
+    st.write('**Monzo Personal API**: Monzo provide a personal API [here](https://docs.monzo.com/#introduction), this will be behind streamlit personal authentication so only I can access the data. Involves moving my banking over to Monzo, something I want to do anyway')
