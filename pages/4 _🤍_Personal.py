@@ -1,11 +1,11 @@
 
-import Important_Metrics as im
+import important_metrics as im
 import importlib
 import streamlit as st
 import streamlit_nested_layout
 import pandas as pd
 import plotly.express as px
-import Visuals
+from resources import Visuals
 
 from streamlit_extras.app_logo import add_logo
 from streamlit_extras.metric_cards import style_metric_cards
@@ -21,14 +21,14 @@ st.write("""<style>@import url('https://fonts.googleapis.com/css2?family=Kanit')
 color = '#6e6056'
 
 style_metric_cards( background_color = color,border_left_color=color, border_size_px =0.3, border_color=color, border_radius_px=10)
-add_logo("images/logo_transparent_background.png", height=210)
+add_logo("resources/logo_transparent_background.png", height=210)
 
 
 #loading data and important metricsget_just_read_books
 
 @st.cache()
 def get_data():
-    df = pd.read_csv('Database.csv')
+    df = pd.read_csv('data/database.csv')
     return df
 
 df = get_data()

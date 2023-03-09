@@ -1,11 +1,11 @@
 
-import Important_Metrics as im
+import important_metrics as im
 import pandas as pd
 import plotly.express as px
 import streamlit as st
 import streamlit_nested_layout
-import Visuals
 
+from resources import Visuals
 from streamlit_extras.app_logo import add_logo
 from streamlit_extras.metric_cards import style_metric_cards
 from streamlit_pills import pills
@@ -19,12 +19,12 @@ st.write("""<style>@import url('https://fonts.googleapis.com/css2?family=Kanit')
 color = '#6e6056'
 
 style_metric_cards( background_color = color,border_left_color=color, border_size_px =0.3, border_color=color, border_radius_px=10)
-add_logo("images/logo_transparent_background.png", height=210)
+add_logo("resources/logo_transparent_background.png", height=210)
 
 
 #loading data and important metrics
 
-df = pd.read_csv('Database.csv')
+df = pd.read_csv('data/database.csv')
 number_of_entries = len(df)
 
 productivity_metrics = im.ImportantMetrics(metric_list = [ 'Weight', 'Body-Fat %', 'VO2 Max', 'Net Calories', 'Steps', 'Active Cals', 'Total Cals', 'Exercise' , 'Cals Consumed', 'Protein', 'Carbs', 'Fat', 'Saturated Fat', 'Sugar', 'Sleep'])
