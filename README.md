@@ -13,7 +13,7 @@ To view the dashboard with dummy data for privacy, please go to this [link](http
 	<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/apple/apple-original.svg"  width="60" height="60"/>
     <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/pandas/pandas-original.svg" height="60" width="60"   />
     <img src="https://avatars.githubusercontent.com/u/45109972?s=280&v=4" height="60" width="60"   />
-    <img src="https://cdn.theorg.com/39deb29f-6dae-4ac1-940c-39515deac1e5_medium.jpg" height="60" width="60"   /> </div>
+    <img src="https://mobilitydb.com/images/plotly.png" height="60" width="60"   /> </div>
 
 <h4 align="left">API's Leveraged</h4>
 
