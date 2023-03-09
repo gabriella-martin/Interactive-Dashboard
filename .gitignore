@@ -2,3 +2,5 @@
 .DS_Store
 __pycache__
 .streamlit/secrets.toml
+footie
+instant_pipelines/__pycache__
