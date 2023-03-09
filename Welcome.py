@@ -80,10 +80,10 @@ st.markdown(f"<a  href='#linkto_data' style='color: #FDF4DC;'>💡Click here for
 outer_cols = st.columns([13, 4])
 
 with outer_cols[0]:
+
     st.image(nasa_image[0],  caption='NASA Image of the Day: ' + nasa_image[1], use_column_width=True)  
 
 with outer_cols[1]:
-    st.write('')
 
     with st.expander("☑️ **Today's Tasks**", expanded=True):
 

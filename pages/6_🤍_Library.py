@@ -2,7 +2,11 @@ import streamlit as st
 from instant_pipelines import welcome_pipeline
 from streamlit_extras.app_logo import add_logo
 
-
+st.set_page_config(
+    page_title="Library",
+    page_icon="resources/logo_transparent_background.png",
+    layout="wide",
+    initial_sidebar_state='auto')
 add_logo("resources/logo_transparent_background.png", height=210)
 
 st.write("""<style>@import url('https://fonts.googleapis.com/css2?family=Kanit');html, body, [class*="css"]  {  

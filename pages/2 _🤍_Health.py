@@ -9,7 +9,11 @@ from streamlit_extras.metric_cards import style_metric_cards
 from streamlit_pills import pills
 
 #styling
-
+st.set_page_config(
+    page_title="Health",
+    page_icon="resources/logo_transparent_background.png",
+    layout="wide",
+    initial_sidebar_state='auto')
 st.write("""<style>@import url('https://fonts.googleapis.com/css2?family=Kanit');html, body, [class*="css"]  {  
    font-family: 'Kanit';  
 }</style>""", unsafe_allow_html=True)

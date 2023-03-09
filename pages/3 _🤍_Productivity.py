@@ -11,7 +11,11 @@ from streamlit_pills import pills
 from instant_pipelines import welcome_pipeline
 
 # styling
-
+st.set_page_config(
+    page_title="Productivity",
+    page_icon="resources/logo_transparent_background.png",
+    layout="wide",
+    initial_sidebar_state='auto')
 st.write("""<style>@import url('https://fonts.googleapis.com/css2?family=Kanit');html, body, [class*="css"]  {  
    font-family: 'Kanit';  
 }</style>""", unsafe_allow_html=True)

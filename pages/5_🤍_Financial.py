@@ -1,11 +1,14 @@
 
 import requests
 import streamlit as st
-
-
 from streamlit_extras.app_logo import add_logo
 from streamlit_lottie import st_lottie
 
+st.set_page_config(
+    page_title="Financial",
+    page_icon="resources/logo_transparent_background.png",
+    layout="wide",
+    initial_sidebar_state='auto')
 add_logo("resources/logo_transparent_background.png", height=210)
 
 st.write("""<style>@import url('https://fonts.googleapis.com/css2?family=Kanit');html, body, [class*="css"]  {  
