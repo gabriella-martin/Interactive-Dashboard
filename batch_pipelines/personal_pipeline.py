@@ -128,6 +128,7 @@ class TodoistPipeline:
         self.find_percentages_of_completed(collated_lists)
 
 class ExistPipeline:
+
     def get_mood_data(self):
         todays_date = (str(datetime.datetime.today()))[:10]
         response = requests.get("https://exist.io/api/2/attributes/with-values", 
@@ -143,15 +144,11 @@ class ExistPipeline:
         return mood_today
 
 
+if __name__ == '__main__':
 
-
-todoist = TodoistAPI()
-percentages_list = todoist.personal_pipeline()
-
-
-exist = ExistPipeline()
-mood_today = exist.get_mood_data()
-
-percentages_list.append(mood_today)
-
-percentage_list_columns = ['Cleaning', 'Dogs', 'Self-Care', 'Mood']
+    todoist = TodoistAPI()
+    percentages_list = todoist.personal_pipeline()
+    exist = ExistPipeline()
+    mood_today = exist.get_mood_data()
+    percentages_list.append(mood_today)
+    percentage_list_columns = ['Cleaning', 'Dogs', 'Self-Care', 'Mood']

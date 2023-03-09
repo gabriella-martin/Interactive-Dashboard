@@ -87,31 +87,24 @@ class WakaTimePipeline:
 
 
 
-
-trackingtime = TrackingTimePipeline()
-todays_hours_recorded = trackingtime.get_hours_done_today()
+if __name__ == '__main__':
     
-work_daily_hours = []
+    trackingtime = TrackingTimePipeline()
+    todays_hours_recorded = trackingtime.get_hours_done_today()
+    work_daily_hours = []
+    work_daily_hours.append(todays_hours_recorded[0])
+    work_daily_hours.append(todays_hours_recorded[1])
+    work_daily_hours_columns = ['Reading Hours', 'Work Hours']
 
-work_daily_hours.append(todays_hours_recorded[0])
-work_daily_hours.append(todays_hours_recorded[1])
-        
-work_daily_hours_columns = ['Reading Hours', 'Work Hours']
+    git_hub_stats = []
+    exist = ExistPipeline()
+    todays_git_stats = exist.get_todays_streak()
+    git_hub_stats.append(todays_git_stats[0])
+    git_hub_stats.append(todays_git_stats[1])
+    git_hub_status_columns = ['GitHub Contributions', 'GitHub Streak']
 
-git_hub_stats = []
-exist = ExistPipeline()
-todays_git_stats = exist.get_todays_streak()
-
-git_hub_stats.append(todays_git_stats[0])
-git_hub_stats.append(todays_git_stats[1])
-
-git_hub_status_columns = ['GitHub Contributions', 'GitHub Streak']
-
-coding_time = []
-wakatime = WakaTimePipeline()
-coding_time_today = wakatime.get_total_time_spent_coding_today()
-
-coding_time.append(wakatime)
-
-
-productivity_list = work_daily_hours + git_hub_stats + coding_time
+    coding_time = []
+    wakatime = WakaTimePipeline()
+    coding_time_today = wakatime.get_total_time_spent_coding_today()
+    coding_time.append(wakatime)
+    productivity_list = work_daily_hours + git_hub_stats + coding_time

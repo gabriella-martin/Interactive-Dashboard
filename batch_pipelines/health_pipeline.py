@@ -1,21 +1,15 @@
-
 import csv
 import datetime
 import time
-import shutil
 import requests
-from datetime import  timedelta
 from decouple import config
-
 from pyicloud import PyiCloudService
 from shutil import copyfileobj
-
 
 class AppleHealthPipeline:
 
     def __init__(self):
         self.todays_date_only = str(datetime.datetime.today())[:10] 
-        #- timedelta(1)))[:10]
         self.api = PyiCloudService(config('APPLE_ID'), config('APPLE_ID_PASSWORD'))
         self.order_of_column_names_in_csvfile = ['Active Energy kj', 'Basal Energy Burned kj', 'Carbs g', 'Dietary Energy kj'
         , 'Dietary Sugar g', 'Protein g', 'Saturated Fat g', 'Steps Count', 'Total Fat']
@@ -73,7 +67,6 @@ class AppleHealthPipeline:
 
 class WithingsPipeline:
 
-
     def connect_to_api(self):
         client_id = config('WITHINGS_CLIENT_ID')
         client_secret = config('WITHINGS_CLIENT_SECRET')
@@ -85,7 +78,6 @@ class WithingsPipeline:
 
         headers =  {"Authorization": f"Bearer {new_access_token}"}
         today = (datetime.datetime.today())
-        today_start_of_day = today.replace(hour=00, minute=00, second=00, microsecond=00)
         today_unix = time.mktime(today.timetuple())
         today_start_of_day_unix = time.mktime(today.timetuple())
         data = {'action': 'getmeas','meastypes': '1,6', 'start_time': f'{today_start_of_day_unix}', 'end_time': f'{today_unix}' }
@@ -93,7 +85,6 @@ class WithingsPipeline:
         response = response.json()
         return response
         
-
     def parse_data(self):
         
         todays_withings_body_measurements = []
@@ -107,6 +98,7 @@ class WithingsPipeline:
         return(todays_withings_body_measurements)
         
 class ExistPipeline:
+        
         def get_sleep_data(self):
             todays_date = (str(datetime.datetime.today()))[:10]
             response = requests.get("https://exist.io/api/2/attributes/with-values",headers = {'Authorization': f"Token {config('EXIST_API_TOKEN')}"} )
@@ -121,18 +113,16 @@ class ExistPipeline:
 
             return(sleep_hours)
 
-exist = ExistPipeline()
-sleep_hours = exist.get_sleep_data()
 
-todays_apple_health_data_in_list = (AppleHealthPipeline()).convert_from_kj_to_kcals()
-todays_withings_body_measurements=(WithingsPipeline()).parse_data()
-
-todays_full_health_data = todays_apple_health_data_in_list + todays_withings_body_measurements
-
-todays_full_health_data.append(sleep_hours)
-
-order_of_list_quantity_measure = ['Active Cals', 'Total Cals Burned', 'Carbs', 'Total Cals Consumed'
-        , 'Sugar', 'Protein', 'Sat Fat', 'Steps', 'Fat', 'Body Weight kg', 'Body Fat %', 'Sleep Hours']
+if __name__ == '__main__':
+    exist = ExistPipeline()
+    sleep_hours = exist.get_sleep_data()
+    todays_apple_health_data_in_list = (AppleHealthPipeline()).convert_from_kj_to_kcals()
+    todays_withings_body_measurements=(WithingsPipeline()).parse_data()
+    todays_full_health_data = todays_apple_health_data_in_list + todays_withings_body_measurements
+    todays_full_health_data.append(sleep_hours)
+    order_of_list_quantity_measure = ['Active Cals', 'Total Cals Burned', 'Carbs', 'Total Cals Consumed'
+            , 'Sugar', 'Protein', 'Sat Fat', 'Steps', 'Fat', 'Body Weight kg', 'Body Fat %', 'Sleep Hours']
 
 
 
