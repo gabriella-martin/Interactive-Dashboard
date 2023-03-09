@@ -1,10 +1,8 @@
-
 import requests 
 import pickle
 import datetime
 import streamlit as st
 from datetime import datetime
-from decouple import config 
 
 def get_manutd_next_game_data():
     url = "https://api-football-v1.p.rapidapi.com/v3/fixtures"
@@ -121,7 +119,7 @@ def tube_status_emoji():
 
 
 def nasa_image_of_the_day():
-    api_key = st.secrets('NASA_KEY')
+    api_key = st.secrets['NASA_KEY']
     url = f'https://api.nasa.gov/planetary/apod?api_key={api_key}'
     response = requests.get(url)
     nasa_image = (response.json())['hdurl']

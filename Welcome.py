@@ -138,8 +138,7 @@ with st.expander(label='Behind the Scenes', expanded=True):
     with st.expander(label='Visualisation'):
         visuals.welcome_visual()
     
-    with st.expander(label='Future Roadmap'):
-        st.write('')
+
 
 
 

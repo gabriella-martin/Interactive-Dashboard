@@ -68,7 +68,7 @@ As a lifelong fan of Manchester United, I never want to miss any of their games.
 
 **Data Pipeline Visualisation**
 
-![alt text](images/welcomeimage.png)
+![alt text](resources/welcomeimage.png)
 
 ---
 
@@ -84,8 +84,8 @@ My apple watch tracks my movement and VO2 max but currently there is no easy dir
 
 
 <div align="center">
-	<img src="images/automatingshortcut.PNG" height =350  />
-	 <img src="images/shortcut.PNG" height="350"  />
+	<img src="resources/automatingshortcut.PNG" height =350  />
+	 <img src="resources/shortcut.PNG" height="350"  />
  </div>
 
 Next step is to gain access to this file in my Python script, for this I use [PyiCloud]( https://github.com/picklepete/pyicloud). Once the file is accessible, I use python to extract and process the data. This data alongside the other health metrics is then added to my database CSV file ready to be visualised with Streamlit and Pandas
@@ -103,7 +103,7 @@ For retrieval of my body measurements, I use a [Withings Smart-Scale]( https://w
 
 
 <div align="center">
-	<img src="images/healthimage.png"/>
+	<img src="resources/healthpipeline.png"/>
  </div>
 
 <h2 align="center">Productivity Data</h2>
@@ -126,7 +126,7 @@ GitHub do have their own [API]( https://docs.github.co.uk/en/graphql) capable of
 
 
 <div align="center">
-	<img src="images/productivityimage.png"/>
+	<img src="resources/productivityimage.png"/>
  </div>
 
 <h2 align="center">Personal Data</h2>

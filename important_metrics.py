@@ -1,6 +1,6 @@
 import pandas as pd
 
-df = pd.read_csv('Database.csv')
+df = pd.read_csv('data/database.csv')
 number_of_entries = len(df)
 
 class ImportantMetrics:
