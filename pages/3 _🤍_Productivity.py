@@ -4,11 +4,11 @@ import pandas as pd
 import plotly.express as px
 import streamlit as st
 import streamlit_nested_layout
-from resources import Visuals
+from resources import visuals
 from streamlit_extras.app_logo import add_logo
 from streamlit_extras.metric_cards import style_metric_cards
 from streamlit_pills import pills
-
+from instant_pipelines import welcome_pipeline
 
 # styling
 
@@ -28,8 +28,7 @@ add_logo("resources/logo_transparent_background.png", height=210)
 df = pd.read_csv('data/database.csv')
 number_of_entries = len(df)
 
-DataPipeline = importlib.import_module('Data-Pipeline')
-books=DataPipeline.AirTablePipeline()
+books=welcome_pipeline.AirTablePipeline()
 currently_reading = books.get_currently_reading_books()
 
 productivity_metrics = im.ImportantMetrics(metric_list = ['Work Hours', 'Reading Hours','Coding Hours',  'GitHub Contributions', 'Coding Hours'])
@@ -213,7 +212,7 @@ else:
 st.markdown(f"<div id='linkto_data'></div>", unsafe_allow_html=True)
 data = st.write('')
  
-with st.expander(label='Behind the Scenes', expanded=True):
+with st.expander(label='Data Details: Behind the Scenes', expanded=True):
     st.write('')
     with st.expander(label='Data Pipeline'):
 
@@ -236,7 +235,7 @@ with st.expander(label='Behind the Scenes', expanded=True):
         st.write('')
 
     with st.expander(label='Visualisation'):
-        Visuals.productivity_visual()
+        visuals.productivity_visual()
     
     with st.expander(label='Future Roadmap'):
         st.write('screen time')

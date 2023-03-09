@@ -5,12 +5,12 @@ import streamlit as st
 import streamlit_nested_layout
 import pandas as pd
 import plotly.express as px
-from resources import Visuals
+from resources import visuals
 
 from streamlit_extras.app_logo import add_logo
 from streamlit_extras.metric_cards import style_metric_cards
 from streamlit_pills import pills
-DataPipeline = importlib.import_module('Data-Pipeline')
+from instant_pipelines import welcome_pipeline
 
 
 # styling
@@ -24,7 +24,7 @@ style_metric_cards( background_color = color,border_left_color=color, border_siz
 add_logo("resources/logo_transparent_background.png", height=210)
 
 
-#loading data and important metricsget_just_read_books
+#loading data and important metrics
 
 @st.cache()
 def get_data():
@@ -33,9 +33,9 @@ def get_data():
 
 df = get_data()
 
-spotify = DataPipeline.SpotifyPipeline()
+spotify = welcome_pipeline.SpotifyPipeline()
 top_tracks = spotify.get_top_tracks()
-airtable=DataPipeline.AirTablePipeline()
+airtable=welcome_pipeline.AirTablePipeline()
 currently_reading = airtable.get_currently_reading_books()
 just_read = airtable.get_just_read_books()
 productivity_metrics = im.ImportantMetrics(metric_list = ['Personal', 'Dogs', 'Cleaning', 'Self-Care', 'Mood', 'Sleep'])
@@ -73,46 +73,29 @@ st.write('')
 
 # first row
 
-
-columns = st.columns(5)
-
-if date_range == '3 Day Average':
-       
-    columns[0].metric(label='Overall %', value=three_day_averages[0], delta=str(three_day_averages[0]) + '%')
-    columns[1].metric(label="Dogs %", value=three_day_averages[1], delta=str(current_three_day_vs_past_three_day[1]) + '%')
-    columns[2].metric(label="Cleaning %", value=three_day_averages[2], delta=str(current_three_day_vs_past_three_day[2]) + '%')
-    columns[3].metric(label="Self-Care %", value=three_day_averages[3], delta=str(current_three_day_vs_past_three_day[3]) + '%')
-    with columns[4]:
-        value = yesterdays_metrics[4]
-        emoji = get_mood_emoji(value)
-        st.write(f'## Mood: {emoji}')
-    with columns[5]:
-        st.write(f'## Sleep: {three_day_averages[5]}hrs')
-if date_range == '7 Day Average':
-
-    columns[0].metric(label="Overall %", value=seven_day_averages[0], delta=str(current_seven_day_vs_past_seven_day[0]) + '%')
-    columns[1].metric(label="Dogs %", value=seven_day_averages[1], delta=str(current_seven_day_vs_past_seven_day[1]) + '%')
-    columns[2].metric(label="Cleaning %", value=seven_day_averages[2], delta=str(current_seven_day_vs_past_seven_day[2]) + '%')
-    columns[3].metric(label="Self-Care %", value=seven_day_averages[3], delta=str(current_seven_day_vs_past_seven_day[3]) + '%')
-    with columns[4]:
-        value = three_day_averages[4]
-        emoji = get_mood_emoji(value)
-        st.write(f'## Mood: {emoji}')
-    with columns[5]:
-        st.write(f'## Sleep: {seven_day_averages[5]}hrs')
 if date_range == 'Yesterday':
-    columns[0].metric(label="Overall %", value=seven_day_averages[0], delta=str(current_seven_day_vs_past_seven_day[0]) + '%')
-    columns[1].metric(label="Dogs %", value=yesterdays_metrics[1], delta=str(yesterday_vs_day_before_yesterday_percent_change[1]) + '%')
-    columns[2].metric(label="Cleaning %", value=yesterdays_metrics[2], delta=str(yesterday_vs_day_before_yesterday_percent_change[2]) + '%')
-    columns[3].metric(label="Self-Care %", value=yesterdays_metrics[3], delta=str(yesterday_vs_day_before_yesterday_percent_change[3]) + '%')
-    with columns[4]:
-        value = seven_day_averages[4]
-        emoji = get_mood_emoji(value)
-        st.write(f'## Mood: {emoji}')
+    values = yesterdays_metrics
+    deltas = yesterday_vs_day_before_yesterday_percent_change
+if date_range == '3 Day Average':
+    values = three_day_averages
+    deltas = current_three_day_vs_past_three_day
+if date_range == '7 Day Average':
+    values = seven_day_averages
+    deltas = current_seven_day_vs_past_seven_day
 
+columns = st.columns(6)
 
+columns[0].metric(label='Overall %', value=values[0], delta=str(deltas[0]) + '%')
+columns[1].metric(label="Dogs %", value=values[1], delta=str(deltas[1]) + '%')
+columns[2].metric(label="Cleaning %", value=values[2], delta=str(deltas[2]) + '%')
+columns[3].metric(label="Self-Care %", value=values[3], delta=str(deltas[3]) + '%')
+with columns[4]:
+    value = values[4]
+    emoji = get_mood_emoji(value)
+    st.write(f'## Mood: {emoji}')
+with columns[5]:
+    st.write(f'## Sleep: {values[5]}hrs')
 
-       
 
 st.write('')
 st.write('')
@@ -177,7 +160,7 @@ else:
 st.markdown(f"<div id='linkto_data'></div>", unsafe_allow_html=True)
 data = st.write('')
  
-with st.expander(label='Behind the Scenes', expanded=True):
+with st.expander(label='Data Details: Behind the Scenes', expanded=True):
     st.write('')
     with st.expander(label='Data Pipeline'):
 
@@ -203,7 +186,7 @@ with st.expander(label='Behind the Scenes', expanded=True):
         st.write('')
 
     with st.expander(label='Visualisation'):
-        Visuals.personal_visual()
+        visuals.personal_visual()
     
     with st.expander(label='Future Roadmap'):
         st.write('screen time')
