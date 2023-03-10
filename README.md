@@ -22,7 +22,7 @@
 
 **API's Used**: Exist, Withings, PyiCloud, TrackingTime, WakaTime, AirTable, Spotify, ToDoist, FootballAPI, TFL & Weather
 
-<div align="left">
+<div align="center">
 	<img src="https://pbs.twimg.com/profile_images/413637612419555328/i0FUzkwi_400x400.png" height="40" width="40"   />
 	 <img src="https://upload.wikimedia.org/wikipedia/fr/a/a2/Logo_withings.png" height="40" width="120"  />
 	<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/ICloud_logo.svg/2560px-ICloud_logo.svg.png" alt="html5" width="60" height="40"/>
