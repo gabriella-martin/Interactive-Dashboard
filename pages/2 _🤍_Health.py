@@ -116,15 +116,8 @@ col1, col2, col3, col4 = st.columns([3,3, 2, 4])
 
 with col1:
     labels = ['Protein', 'Carbs', 'Fat']
-    if date_range == 'Yesterday':
-        values = [yesterdays_metrics[9], yesterdays_metrics[10], yesterdays_metrics[11]]
-        
-    if date_range == '3 Day Average':
-        values = [three_day_averages[9], three_day_averages[10], three_day_averages[11]]
-    
-    if date_range == '7 Day Average':
-        values = [seven_day_averages[9], seven_day_averages[10], seven_day_averages[11]]
-    fig = px.pie( title = 'Yesterday:',height = 290, values=values, labels=labels, width=250, names=labels, hole=0.7, color = labels, color_discrete_map={'Protein':'#6e6056', 'Carbs': '#a69a8f', 'Fat': '	#e5ddd3'})
+    values = [values[9], values[10], values[11]]
+    fig = px.pie( title = f'{date_range}:',height = 290, values=values, labels=labels, width=250, names=labels, hole=0.7, color = labels, color_discrete_map={'Protein':'#6e6056', 'Carbs': '#a69a8f', 'Fat': '	#e5ddd3'})
     st.plotly_chart(fig)
 
 with col2:

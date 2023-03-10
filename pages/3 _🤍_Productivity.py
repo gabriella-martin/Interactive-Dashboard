@@ -28,7 +28,6 @@ add_logo("resources/logo_transparent_background.png", height=210)
 
 # loading data and important metrics
 
-
 df = pd.read_csv('data/database.csv')
 number_of_entries = len(df)
 
@@ -61,6 +60,7 @@ yesterdays_streak = df.iloc[number_of_entries -1]['GitHub Streak']
 
 
 # start of visual
+
 with st.sidebar:
     st.markdown("<h4 style='text-align: center;color: #FDF4DC;'>Date Range Slider</t>", unsafe_allow_html=True)
     date_range = st.select_slider(label = 'DATE RANGE SLIDER', options = ['Yesterday', '3 Day Average', '7 Day Average'], label_visibility = 'collapsed')
@@ -74,38 +74,31 @@ st.write('')
 
 # first row
 
+if date_range == 'Yesterday':
+    values = yesterdays_metrics
+    deltas = yesterday_vs_day_before_yesterday_percent_change
+if date_range == '3 Day Average':
+    values = three_day_averages
+    deltas = current_three_day_vs_past_three_day
+if date_range == '7 Day Average':
+    values = seven_day_averages
+    deltas = current_seven_day_vs_past_seven_day
 
 outer_cols = st.columns([7,0.5,3.5])
 
 with outer_cols[0]:
     
-    if date_range == '3 Day Average':
-        col1, col2, col3 = st.columns(3)
-        col1.metric(label="Work Hours", value=three_day_averages[0], delta=str(current_three_day_vs_past_three_day[0]) + '%')
-        col2.metric(label="Reading Hours", value=three_day_averages[1], delta=str(current_three_day_vs_past_three_day[1]) + '%')
-        col3.metric(label="Coding Hours", value=three_day_averages[2], delta=str(current_three_day_vs_past_three_day[2]) + '%')
+    col1, col2, col3 = st.columns(3)
+    col1.metric(label="Work Hours", value=values[0], delta=str(deltas[0]) + '%')
+    col2.metric(label="Reading Hours", value=values[1], delta=str(deltas[1]) + '%')
+    col3.metric(label="Coding Hours", value=values[2], delta=str(deltas[2]) + '%')
 
-    if date_range == '7 Day Average':
-        col1, col2, col3 = st.columns(3)
-        col1.metric(label="Work Hours", value=seven_day_averages[0], delta=str(current_seven_day_vs_past_seven_day[0]) + '%')
-        col2.metric(label="Reading Hours", value=seven_day_averages[1], delta=str(current_seven_day_vs_past_seven_day[1]) + '%')
-        col3.metric(label="Coding Hours", value=seven_day_averages[2], delta=str(current_seven_day_vs_past_seven_day[2]) + '%')
-
-    if date_range == 'Yesterday':
-        col1, col2, col3 = st.columns(3)
-        col1.metric(label="Work Hours", value=yesterdays_metrics[0], delta=str(yesterday_vs_day_before_yesterday_percent_change[0]) + '%')
-        col2.metric(label="Reading Hours", value=yesterdays_metrics[1], delta=str(yesterday_vs_day_before_yesterday_percent_change[1]) + '%')
-        col3.metric(label="Coding Hours", value=yesterdays_metrics[2], delta=str(yesterday_vs_day_before_yesterday_percent_change[2]) + '%')
-    
 with outer_cols[2]:
     st.write('')
     with st.expander('**Daily Goals**', expanded=True):
         st.write('8 Hours Work' +'  \n' + '2 Hours Reading' )
-
-
   
 st.write('')
-
 
 # second row
 
@@ -117,20 +110,7 @@ with outer_columns[0]:
         col1, col2 = st.columns(2)
         col1.write('')
         col2.write('')
-        if date_range == '3 Day Average':
-            
-            col1.metric(label="Commits", value=three_day_averages[3], delta=str(current_three_day_vs_past_three_day[3]) + '%')
-
-        if date_range == '7 Day Average':
-            
-            col1.metric(label="Commits", value=seven_day_averages[3], delta=str(current_seven_day_vs_past_seven_day[3]) + '%')
-
-
-        if date_range == 'Yesterday':
-            
-            col1.metric(label="Commits", value=yesterdays_metrics[3], delta=str(yesterday_vs_day_before_yesterday_percent_change[3]) + '%')
-
-    
+        col1.metric(label="Commits", value=values[3], delta=str(deltas[3]) + '%')
         col2.write('')
         col2.metric(label='Streak', value = yesterdays_streak)
 
@@ -141,19 +121,16 @@ with outer_columns[1]:
         st.write('')
         col1,col2 = st.columns(2)
         col2.write('')
-
+        col1.metric(label="Hours", value=values[4], delta=str(deltas[4]) + '%')
         if date_range == '3 Day Average':
             
-            col1.metric(label="Hours", value=three_day_averages[4], delta=str(current_three_day_vs_past_three_day[4]) + '%')
             col2.metric(label='Mits/hr', value = three_day_commits_per_hour)
         if date_range == '7 Day Average':
             
-            col1.metric(label="Hours", value=seven_day_averages[4], delta=str(current_seven_day_vs_past_seven_day[4]) + '%')
             col2.metric(label='Mits/hr', value = seven_day_commits_per_hour)
 
         if date_range == 'Yesterday':
             
-            col1.metric(label="Hours Coded",value=yesterdays_metrics[4], delta=str(yesterday_vs_day_before_yesterday_percent_change[4]) + '%')
             col2.metric(label='Commits/hr', value = one_day_commits_per_hour, )
 
 
@@ -225,8 +202,6 @@ with st.expander(label='Data Details: Behind the Scenes', expanded=True):
 
         cols = st.columns([0.2,6,0.2])
         cols[1].write("For tracking my working and reading time I use [Tracking Time](https://trackingtime.co/), other viable options with API’s include [RescueTime](https://www.rescuetime.co.uk/) or [Toggl](https://toggl.co.uk/), but I prefer the interface of Tracking Time. Daily my Python script connects to their [API]( https://api.trackingtime.co/doc/index.html) and with a bit of processing, I can retrieve the time spent that day on reading and working respectively. This data is then added to my CSV and visualised here with Pandas", unsafe_allow_html=True)
-
-
 
         st.write('### • Retrieving Coding Hours')
         cols = st.columns([0.2,6,0.2])
