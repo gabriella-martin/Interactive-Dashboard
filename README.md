@@ -1,10 +1,13 @@
 <h1 align="center">Interactive Dashboard</h1>
 
 
-To view the dashboard with dummy data for privacy, please go to this [link](https://gabriella-martin-interactive-dashboard-welcome-9hpibj.streamlit.app/)
+*To view the auto-updating & interactive dashboard with dummy data for privacy, please go to this [link](https://gabriella-martin-interactive-dashboard-welcome-9hpibj.streamlit.app/), please first read the disclaimer below*
 
+***Disclaimer**: I use Streamlit Community Cloud (free) to host this project, as this is a free hosting service, the speed can be slightly slow, but streamlit was used to greatly simplify the front-end coding without sacrificing on aesthetics and allow me to focus on the back-end core of this project*
 
-<h4 align="left">Languages and Technologies</h4>
+---
+
+**Technologies Used**: Python, Git, API's, Apple Shortcuts,  Pandas, Streamlit & Plotly
 
 <div align="left">
 	<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original-wordmark.svg" height="60" width="60"   />
@@ -15,24 +18,26 @@ To view the dashboard with dummy data for privacy, please go to this [link](http
     <img src="https://avatars.githubusercontent.com/u/45109972?s=280&v=4" height="60" width="60"   />
     <img src="https://mobilitydb.com/images/plotly.png" height="60" width="60"   /> </div>
 
-<h4 align="left">API's Leveraged</h4>
+---
+
+**API's Used**: Exist, Withings, PyiCloud, TrackingTime, WakaTime, AirTable, Spotify, ToDoist, FootballAPI, TFL & Weather
 
 <div align="left">
 	<img src="https://pbs.twimg.com/profile_images/413637612419555328/i0FUzkwi_400x400.png" height="40" width="40"   />
 	 <img src="https://upload.wikimedia.org/wikipedia/fr/a/a2/Logo_withings.png" height="40" width="120"  />
 	<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/ICloud_logo.svg/2560px-ICloud_logo.svg.png" alt="html5" width="60" height="40"/>
-	<img src="https://trackingtime.co/wp-content/uploads/2022/09/TrackingTime-logo-complete.png"  width="140" height="30"/>
+	<img src="https://trackingtime.co/wp-content/uploads/2022/09/TrackingTime-logo-complete.png"  width="150" height="30"/>
     <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQra-BSlYIkhhuSxGEZ6rYVqoJojLDL-3wuXPEtul4U5lnHooSGaR4JtcNEk_57eIuj5jI&usqp=CAU" height="40" width="40"   />
     <img src="https://www.airtable.com/images/newsroom/newsroom_image-1_1x.png" height="50" width="60"   />
-    <img src="https://storage.googleapis.com/pr-newsroom-wp/1/2018/11/Spotify_Logo_RGB_Green.png" height="40" width="100"   /> 
-	<img src="https://upload.wikimedia.org/wikipedia/commons/6/6d/Todoist_logo.png" alt="html5" width="100" height="40"/>
+    <img src="https://storage.googleapis.com/pr-newsroom-wp/1/2018/11/Spotify_Logo_RGB_Green.png" height="40" width="120"   /> 
+	<img src="https://upload.wikimedia.org/wikipedia/commons/6/6d/Todoist_logo.png" alt="html5" width="120" height="40"/>
 	<img src="https://api-sports.io/assets/img/home1/hero-banner.png"  width="60" height="60"/>
     <img src="https://camo.githubusercontent.com/2fbe9828475e6b419546ec47be120a0e6e8dfc6e3d8d3c433463817a57c0e977/68747470733a2f2f626c6f672e74666c2e676f762e756b2f77702d636f6e74656e742f75706c6f6164732f323031382f30352f63726f707065642d6c6f676f5f726f756e64656c2d322e706e67" height="60" width="60"   />
     <img src="https://blog.weatherapi.com/wp-content/uploads/2020/02/Asset-62.png" height="60" width="130"   /></div>
 
+---
 
-
-<h2 align="left">Introduction</h2>
+#### Introduction
 
 As someone who loves collecting data on my daily life, I was motivated by the need to simplify the often cumbersome process of accessing and analyzing data that plays a crucial role in my daily life. Before creating this dashboard, I found myself frequently jumping between multiple apps and sources of information just to gather the data I needed to make informed decisions about my health, work, and other important aspects of my life.
 
@@ -47,7 +52,7 @@ I began by brainstorming the metrics I wanted to track and decided on four core 
 Streamlit is a Python library that I chose to use for building my dashboard because of its simplicity, flexibility, and ease of use. I also chose to use Streamlit because I wanted to focus on improving my backend development skills while still being able to create a polished and user-friendly frontend for my dashboard. Streamlit provided an ideal solution to this challenge by enabling me to quickly build a professional-looking dashboard without requiring extensive knowledge of front-end development. This allowed me to focus more on the data processing and analysis that is critical to my project while still delivering a polished and responsive user experience. Streamlit offers a community cloud hosting option at no cost for website hosting. While it's suitable for my needs, with it being free results in slightly slower performance. Check streamlit out [here]( https://docs.streamlit.io/).
 
 ---
-<h2 align="left">Welcome Data</h2>
+<h3 align="left">Welcome Page</h3>
 
 *The full code for my welcome page pipeline can be viewed [here](https://github.com/gabriella-martin/Interactive-Dashboard/blob/main/instant_pipelines/welcome_pipeline.py), the code for the frontend can be viewed [here](https://github.com/gabriella-martin/Interactive-Dashboard/blob/main/Welcome.py). All code on the home page is pulled once the page is loaded to ensure it is in accurate in real-time*
 
@@ -73,11 +78,43 @@ The homepage of my dashboard provides a snapshot of key information that I need 
 ![alt text](resources/welcomepipeline.png)
 
 ---
-####Data Processing 
+##### Data Processing 
 
-Instead of real-time data streaming, I run the pipeline once nightly in a batch process for this page and subsequent pages. Since it's crucial for me to monitor progress over time, I utilized Streamlit's interactive features and incorporated a date range slider into my code. This slider enables me to view yesterday's data (compared to the day before %), a three-day average (compared to the 3-day before average %), or a seven-day average (compared to the 7-day before average %), thereby allowing me to track progress visually across different short-term intervals. The statistics are generated using this [script](https://github.com/gabriella-martin/Interactive-Dashboard/blob/main/important_metrics.py) and are displayed on each page. To visualize long-term data, I utilize pandas and plotly in Streamlit to plot graphs that illustrate the complete dataset and enable me to track trends and gain insights over the long-term.
+Instead of real-time data streaming, I run the pipeline once nightly in a batch process for this page and subsequent pages (unless otherwise specified). Since it's crucial for me to monitor progress over time, I utilized Streamlit's interactive features and incorporated a date range slider into my code. This slider enables me to view yesterday's data (compared to the day before %), a three-day average (compared to the 3-day before average %), or a seven-day average (compared to the 7-day before average %), thereby allowing me to track progress visually across different short-term intervals. The statistics are generated using this [script](https://github.com/gabriella-martin/Interactive-Dashboard/blob/main/important_metrics.py) and are displayed on each page. To visualize long-term data, I utilize pandas and plotly in Streamlit to plot graphs that illustrate the complete dataset and enable me to track trends and gain insights over the long-term.
 
-<h2 align="left">Health Data</h2>
+---
+<h3 align="left">Productivity Data</h3>
+
+*The full code for my productivity data pipeline can be viewed [here](https://github.com/gabriella-martin/Interactive-Dashboard/blob/main/Batch_Pipelines/Productivity-Data-Pipeline.py), the code for the frontend can be viewed [here](https://github.com/gabriella-martin/Interactive-Dashboard/blob/main/pages/3%20_%F0%9F%A4%8D_Productivity.py)*
+
+
+<div align="center">
+	<img src="resources/productivity.gif"/>
+ </div>
+
+
+
+##### Pipeline One: Retrieving Working & Reading Hours
+
+For tracking my working and reading time I use [Tracking Time](https://trackingtime.co/), other viable options with API’s include [RescueTime](https://www.rescuetime.co.uk/) or [Toggl](https://toggl.co.uk/), but I prefer the interface of Tracking Time. Nightly my Python script connects to their [API]( https://api.trackingtime.co/doc/index.html) and with a bit of processing, I can retrieve the time spent that day on reading and working respectively. This data is then added to my CSV and visualised with Streamlit and Pandas.
+
+##### Pipeline Two: Retrieving Coding Hours
+
+For a clearer picture on my productivity I installed [WakaTime]( https://wakatime.co.uk/) into my IDE to get the hours spent actually coding (which is a subset of my time spent working). Nightly my Python script speaks to their [API]( https://wakatime.co.uk/developers) and adds this data to my CSV.
+
+##### Pipeline Three: Retrieving GitHub Contributions
+
+GitHub do have their own [API]( https://docs.github.co.uk/en/graphql) capable of retrieving this data but as I only care about commits at this moment, the [Exist]( https://exist.io/) – GitHub integration suffices. As above, my Python script connects to their [API]( https://developer.exist.io/) each night, retrieves this data and adds it to my CSV database.
+
+**Data Pipeline Visualisation**
+
+
+<div align="left">
+	<img src="resources/productivitypipeline.png"/>
+ </div>
+
+---
+<h3 align="left">Health Data</h3>
 
 *The full code for my health data pipeline can be viewed [here](https://github.com/gabriella-martin/Interactive-Dashboard/blob/main/batch_pipelines/health_pipeline.py), the code for the frontend can be viewed [here](https://github.com/gabriella-martin/Interactive-Dashboard/blob/main/pages/2%20_%F0%9F%A4%8D_Health.py)*
 
@@ -115,37 +152,8 @@ For retrieval of my body measurements, I use a [Withings Smart-Scale]( https://w
  </div>
 
 ---
-<h2 align="left">Productivity Data</h2>
 
-*The full code for my productivity data pipeline can be viewed [here](https://github.com/gabriella-martin/Interactive-Dashboard/blob/main/Batch_Pipelines/Productivity-Data-Pipeline.py), the code for the frontend can be viewed [here](https://github.com/gabriella-martin/Interactive-Dashboard/blob/main/pages/3%20_%F0%9F%A4%8D_Productivity.py)*
-
-<div align="center">
-	<img src="resources/productivity.png"/>
- </div>
-
-
-##### Pipeline One: Retrieving Working & Reading Hours
-
-For tracking my working and reading time I use [Tracking Time](https://trackingtime.co/), other viable options with API’s include [RescueTime](https://www.rescuetime.co.uk/) or [Toggl](https://toggl.co.uk/), but I prefer the interface of Tracking Time. Nightly my Python script connects to their [API]( https://api.trackingtime.co/doc/index.html) and with a bit of processing, I can retrieve the time spent that day on reading and working respectively. This data is then added to my CSV and visualised with Streamlit and Pandas.
-
-##### Pipeline Two: Retrieving Coding Hours
-
-For a clearer picture on my productivity I installed [WakaTime]( https://wakatime.co.uk/) into my IDE to get the hours spent actually coding (which is a subset of my time spent working). Nightly my Python script speaks to their [API]( https://wakatime.co.uk/developers) and adds this data to my CSV.
-
-##### Pipeline Three: Retrieving GitHub Contributions
-
-GitHub do have their own [API]( https://docs.github.co.uk/en/graphql) capable of retrieving this data but as I only care about commits at this moment, the [Exist]( https://exist.io/) – GitHub integration suffices. As above, my Python script connects to their [API]( https://developer.exist.io/) each night, retrieves this data and adds it to my CSV database.
-
-**Data Pipeline Visualisation**
-
-
-<div align="left">
-	<img src="resources/productivitypipeline.png"/>
- </div>
-
----
-
-<h2 align="left">Personal Data</h2>
+<h3 align="left">Personal Data</h3>
 
 *The full code for my personal data pipeline can be viewed [here](https://github.com/gabriella-martin/Interactive-Dashboard/blob/main/Batch_Pipelines/Personal-Data-Pipeline.py), the code for the frontend can be viewed [here](https://github.com/gabriella-martin/Interactive-Dashboard/blob/main/pages/4%20_%F0%9F%A4%8D_Personal.py)*
 
