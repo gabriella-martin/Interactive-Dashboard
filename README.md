@@ -9,7 +9,7 @@
 
 **Technologies Used**: Python, Git, API's, Apple Shortcuts,  Pandas, Streamlit & Plotly
 
-<div align="left">
+<div align="center">
 	<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original-wordmark.svg" height="60" width="60"   />
 	 <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg" height="60" width="60"  />
 	<img src="https://toppng.com/uploads/preview/rest-api-icon-rest-api-icon-11553510526uqs2ynyga2.png" alt="html5" width="40" height="40"/>
