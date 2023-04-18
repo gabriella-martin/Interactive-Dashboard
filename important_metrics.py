@@ -8,8 +8,6 @@ class ImportantMetrics:
     def __init__(self, metric_list):
         self.metric_list = metric_list
 
-
-
     def get_time_period_metric(self, date_range=int):
         time_period_averages = []
         for i in self.metric_list:
