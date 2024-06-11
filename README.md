@@ -1,8 +1,6 @@
 <h1 align="center">Interactive Dashboard</h1>
 
 
-*To view the auto-updating & interactive dashboard with dummy data for privacy, please go to this [link](https://gabriella-martin-interactive-dashboard-welcome-9hpibj.streamlit.app/), please first read the disclaimer below*
-
 ***Disclaimer**: I use Streamlit Community Cloud (free) to host this project, as this is a free hosting service, the speed can be slightly slow, but streamlit was used to greatly simplify the front-end coding without sacrificing on aesthetics and allow me to focus on the back-end core of this project*
 
 ---
